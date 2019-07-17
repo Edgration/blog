@@ -7,18 +7,16 @@
   <meta name="author" content="oranges, 1451426471@qq.com">
   
   
-  
+
   <title>Windows10子系统Ubuntu体验 | Oranges</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
   
     <meta name="keywords" content="linux,工具,">
   
-
-  <script>
-    console.log('\n%c Hexo-theme-bmw v4.0 ' + '%c 🎉 https://github.com/dongyuanxin/theme-bmw 🎉\n' + '\n%c View demo online ' + '%c 🔍 https://godbmw.com/ 🔍  \n' , 'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', '');
-  </script>
 
   
     <meta name="description" content="Welcome">
@@ -45,11 +43,9 @@
   
 
   
-  
+
   <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
-  
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+
   
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -81,7 +77,7 @@
       
         <li class="nav-item" data-path="/">
           
-            <a 
+            <a
               href="/"
               target="_self"
             >
@@ -92,7 +88,7 @@
       
         <li class="nav-item" data-path="/tags/">
           
-            <a 
+            <a
               href="/tags/"
               target="_self"
             >
@@ -103,18 +99,18 @@
       
         <li class="nav-item" data-path="/friends/">
           
-            <a 
+            <a
               href="/friends/"
               target="_self"
             >
-              友链
+              朋友
             </a>
           
         </li>
       
         <li class="nav-item" data-path="/about/">
           
-            <a 
+            <a
               href="/about/"
               target="_self"
             >
@@ -129,8 +125,8 @@
             <ul class="nav-menu--dropdown">
               
                 <li>
-                  <a 
-                    href="https://github.com/czorange123" 
+                  <a
+                    href="https://github.com/czorange123"
                     target="_blank"
                   >
                     Github
@@ -174,10 +170,10 @@
     iconMenuClicked = false;
   let navDOM = document.querySelector("nav.site-navigation");
   iconMenu.addEventListener("click", () => {
-    iconMenuClicked 
+    iconMenuClicked = !iconMenuClicked;
+    iconMenuClicked
       ? navDOM.className = "site-navigation active"
       : navDOM.className = "site-navigation";
-    iconMenuClicked = !iconMenuClicked;
   })
 </script>
 
@@ -205,20 +201,25 @@
     </span>
     
     
-      <span>
-        浏览 : <span class="article-timer" data-identity="linux.html"></span>
-      </span>
-    
   </div>
 
   
 
   <div class="article-content">
     <div class="markdown-body">
-      <p>Windows10更新到1709（或者更早）版本后，Windows10系统自带了一个linux子系统模块，如果你想换个环境写代码，体验体验Winodws10的子系统，就可以接着往下看<br><blockquote><p>前提(必须)<br>1.Windows10版本在1709及以上即可</p>
-</blockquote><br>接下来教大家怎么去把玩这个系统👍<br><blockquote><p>1.先进入“控制面板”=&gt;“程序”=&gt;“启用或关闭Windows功能”=&gt;找到“适用于Linux的Windows子系统”=&gt;选中（前面打勾）=&gt;确定, <b style="color: red">然后重启电脑。</b>见下图:</p>
-</blockquote><br><img src="/images/linux_windows10_config.jpg" alt><br><blockquote><p>2.重启完毕后打开Windows10自带的应用商店，搜索“ubuntu”，找到下载。等下载完毕后打开，窗口会提示installing(正在安装)，等待几分钟。然后会提示输入用户名和密码，输入你喜欢的用户名和密码即可。 见下图:</p>
-</blockquote><br><img src="/images/linux_windows10_unubtu.jpg" alt><br>你已经安装完子系统，接下来去配置它，让它能够满足日常开发需求并且与Windows完美协作。</p>
+      <p>Windows10更新到1709（或者更早）版本后，Windows10系统自带了一个linux子系统模块，如果你想换个环境写代码，体验体验Winodws10的子系统，就可以接着往下看</p>
+<h4 id="前提-必须"><a href="#前提-必须" class="headerlink" title="前提(必须)"></a>前提(必须)</h4><blockquote>
+<p>1.Windows10版本在1709及以上即可</p>
+</blockquote>
+<p>接下来教大家怎么去把玩这个系统👍</p>
+<blockquote>
+<p>1.先进入“控制面板”=&gt;“程序”=&gt;“启用或关闭Windows功能”=&gt;找到“适用于Linux的Windows子系统”=&gt;选中（前面打勾）=&gt;确定, <b style="color: red">然后重启电脑。</b></p>
+</blockquote>
+<h4 id="见下图"><a href="#见下图" class="headerlink" title="见下图:"></a>见下图:</h4><p><img src="/images/linux/linux_windows10_config.jpg" alt></p>
+<blockquote>
+<p>2.重启完毕后打开Windows10自带的应用商店，搜索“ubuntu”，找到下载。等下载完毕后打开，窗口会提示installing(正在安装)，等待几分钟。然后会提示输入用户名和密码，输入你喜欢的用户名和密码即可。 见下图:</p>
+</blockquote>
+<p><img src="/images/linux/linux_windows10_unubtu.jpg" alt><br>你已经安装完子系统，接下来去配置它，让它能够满足日常开发需求并且与Windows完美协作。</p>
 <p>1.安装node.js 按照下面依次执行 (参照<a href="https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions" target="_blank" rel="noopener">官方文档</a>)  <b style="color: red">请注意每一步是否执行成功，否则检查每一步！</b><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -</span><br><span class="line"><span class="meta">$</span> sudo apt-get install -y nodejs</span><br></pre></td></tr></table></figure></p>
 <p>2.安装git 按照下面执行(参照<a href="https://git-scm.com/download/linux" target="_blank" rel="noopener">官方文档</a>)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> apt-get install git</span><br></pre></td></tr></table></figure></p>
 <p>3.（非必须）当然，如果你要玩个人网站(hexo博客等）需要安装hexo(参照<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">官方文档</a>)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install -g hexo-cli</span><br></pre></td></tr></table></figure></p>
@@ -268,7 +269,7 @@
       <div class="nav-pre">
         <i class="iconfont icon-prev"></i>
         上一篇:
-        <a href="/second.html" target="_self">“windows下sublime 安装GitGutter插件无法正常使用”的问题</a>
+        <a href="/second.html" target="_self">“Windows下sublime 安装GitGutter插件无法正常使用”的问题</a>
       </div>
     
     
@@ -282,133 +283,6 @@
 
    
 
-  
-    <script defer>
-const valineAPI = (() => {
-  try {
-    AV.init("j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz", "mhyUfuvzMqhq02Fjxk41wc25");
-  } catch(error) {}
-  const isExist = (identity) => {
-    identity = identity || getRealPath();
-    let query = new AV.Query('Timer');
-    return new Promise((resolve, reject) => {
-      query.equalTo("identity", identity);
-      query.find().then(results => {
-        resolve(results.length > 0);
-      }, error => reject(error));
-    })
-  }
-
-  const _get = (identity) => {
-    let query = null;
-    if(identity && identity instanceof Array){
-      let querys = [];
-      for(let i = 0; i < identity.length; ++i) {
-        querys[i] = new AV.Query('Timer');
-        querys[i].equalTo('identity', identity[i]);
-      }
-      query = AV.Query.or.apply(null ,querys);
-    } else {
-      identity = identity || getRealPath();
-      query = new AV.Query("Timer");
-      query.equalTo("identity", identity);
-    }
-
-    return new Promise((resolve, reject) => {
-      query.find()
-      .then(results => resolve(results))
-      .catch(error => reject(error))
-    })
-  }
-
-  const create = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let Todo = AV.Object.extend('Timer');
-      let todo = new Todo();
-      todo.set("times", 1);
-      todo.set("identity", identity);
-      todo.save().then(res => resolve(true), error => reject(error));
-    })
-  }
-
-  const update = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let query = new AV.Query('Timer');
-      query.equalTo("identity", identity);
-      query.find().then(todos => {
-        todos.forEach(todo => {
-          todo.set("times", todo.attributes.times + 1);
-        });
-        return AV.Object.saveAll(todos);
-      }).then(todos => resolve(true), error => reject(error));
-    })
-  }
-
-  return {
-    isExist,
-    _get,
-    update,
-    create
-  }
-})()
-
-const calcAndWriteTimes = () => {
-  let isPost = true;
-
-  let timerAllDOM = document.querySelectorAll(".article-timer");
-
-  if(isPost) {
-    let identity = timerAllDOM[0].getAttribute("data-identity");
-    valineAPI.isExist(identity)
-    .then(exist => {
-      if(exist) {
-        return valineAPI.update(identity);
-      }
-      return new Promise(resolve => resolve(true));
-    })
-    .then( succuess => valineAPI._get(identity))
-    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
-    .catch(error => console.log(error.message))
-    return ;
-  }
-
-  let timerDOMCache = {};
-
-  for(let timerDOM of timerAllDOM) {
-    let identity = timerDOM.getAttribute("data-identity");
-    if(timerDOMCache.hasOwnProperty(identity)){
-      timerDOMCache[identity].dom.push(timerDOM);
-    }else{
-      timerDOMCache[identity] = {
-        dom: [timerDOM],
-        times: undefined
-      };
-    }
-  }
-
-  let identities = Object.keys(timerDOMCache);
-  valineAPI._get(identities).then(results => {
-    for(let result of results) {
-      let {identity, times} = result.attributes;
-      timerDOMCache[identity].times = times;
-      timerDOMCache[identity].dom.map(item => item.innerText = times);
-    }
-    for(let identity of identities) {
-      if(timerDOMCache[identity].times){
-        continue;
-      }
-      timerDOMCache[identity].dom.map(item => item.innerText = 1);
-      valineAPI.create(identity);
-    }
-  }).catch(error => console.log(error.message))
-}
-
-if(true){
-  calcAndWriteTimes();
-}
-</script>
    
 
 </div>
@@ -416,10 +290,12 @@ if(true){
 
       <footer>
   <p class="site-info">
-    <span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+    <span id="time-to-now"></span>
     <br>
     Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
     <br>
+    
+      Oranges' blog
     
   </p>
 </footer>
@@ -428,7 +304,7 @@ if(true){
 
 <script>
 const timeToNowDOM = document.querySelector("#time-to-now");
-const startTimestamp = new Date(2018, 1, 10).getTime();
+const startTimestamp = new Date(2017, 10, 4).getTime();
 
 const updateTimeStr = () => {
   let offset = parseInt(

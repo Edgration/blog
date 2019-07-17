@@ -7,18 +7,16 @@
   <meta name="author" content="oranges, 1451426471@qq.com">
   
   
-  
+
   <title>js实现图片转换为Base64 | Oranges</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
   
     <meta name="keywords" content="javascript,">
   
-
-  <script>
-    console.log('\n%c Hexo-theme-bmw v4.0 ' + '%c 🎉 https://github.com/dongyuanxin/theme-bmw 🎉\n' + '\n%c View demo online ' + '%c 🔍 https://godbmw.com/ 🔍  \n' , 'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', '');
-  </script>
 
   
     <meta name="description" content="Welcome">
@@ -45,11 +43,9 @@
   
 
   
-  
+
   <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
-  
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+
   
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -81,7 +77,7 @@
       
         <li class="nav-item" data-path="/">
           
-            <a 
+            <a
               href="/"
               target="_self"
             >
@@ -92,7 +88,7 @@
       
         <li class="nav-item" data-path="/tags/">
           
-            <a 
+            <a
               href="/tags/"
               target="_self"
             >
@@ -103,18 +99,18 @@
       
         <li class="nav-item" data-path="/friends/">
           
-            <a 
+            <a
               href="/friends/"
               target="_self"
             >
-              友链
+              朋友
             </a>
           
         </li>
       
         <li class="nav-item" data-path="/about/">
           
-            <a 
+            <a
               href="/about/"
               target="_self"
             >
@@ -129,8 +125,8 @@
             <ul class="nav-menu--dropdown">
               
                 <li>
-                  <a 
-                    href="https://github.com/czorange123" 
+                  <a
+                    href="https://github.com/czorange123"
                     target="_blank"
                   >
                     Github
@@ -174,10 +170,10 @@
     iconMenuClicked = false;
   let navDOM = document.querySelector("nav.site-navigation");
   iconMenu.addEventListener("click", () => {
-    iconMenuClicked 
+    iconMenuClicked = !iconMenuClicked;
+    iconMenuClicked
       ? navDOM.className = "site-navigation active"
       : navDOM.className = "site-navigation";
-    iconMenuClicked = !iconMenuClicked;
   })
 </script>
 
@@ -205,10 +201,6 @@
     </span>
     
     
-      <span>
-        浏览 : <span class="article-timer" data-identity="phototobase64.html"></span>
-      </span>
-    
   </div>
 
   
@@ -216,17 +208,13 @@
   <div class="article-content">
     <div class="markdown-body">
       <p>Base64是一种基于64个可打印字符来表示二进制数据的表示方法。<br>常用于在通常处理文本数据的场合，表示、传输、存储一些二进制数据，包括MIME的电子邮件及XML的一些复杂数据。</p>
-<h3 id="上传图片">上传图片</h3>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">class</span>=<span class="string">"form-control"</span> <span class="attr">name</span>=<span class="string">"photo"</span> <span class="attr">placeholder</span>=<span class="string">"图片"</span> @<span class="attr">change</span>=<span class="string">"getFile($event)"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="获取图片">获取图片</h3>
-
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取图片并调用deal()将图片转换为Base64</span></span><br><span class="line">getFile(event) &#123;</span><br><span class="line">  <span class="keyword">this</span>.deal(event.target.files[<span class="number">0</span>])</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<h3 id="转换成Base64">转换成Base64</h3>
-
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">deal(photo) &#123;</span><br><span class="line">  <span class="comment">// 判断支不支持FileReader</span></span><br><span class="line">  <span class="keyword">if</span> (!photo || !<span class="built_in">window</span>.FileReader) &#123;</span><br><span class="line">    alert(<span class="string">'未选择图片或不支持上传图片！'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 判断上传的文件是否是图片格式</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="regexp">/^image/</span>.test(photo.type)) &#123;</span><br><span class="line">    <span class="comment">//创建一个reader</span></span><br><span class="line">    <span class="keyword">let</span> reader = <span class="keyword">new</span> FileReader();</span><br><span class="line">    <span class="comment">//将图片转成base64格式</span></span><br><span class="line">    reader.readAsDataURL(photo);</span><br><span class="line">    reader.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      base64_photo = reader.result; <span class="comment">// base64_photo是转换好的结果</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    alert(<span class="string">'请选择一张图片！'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<p></p><h3 id="注意事项">注意事项</h3><br><blockquote><p><code>base64_photo</code>在<code>reader.onload</code>函数中，而<code>reader.onload</code>又在<code>deal</code>函数中，形成<strong>闭包</strong>，所以在外部无法访问到<code>base64_photo</code>，想在外部引用<code>base64_photo</code>就要另辟蹊径</p>
-</blockquote><br>在这里提供一个方法，可以将<code>base64_photo</code>定义为全局变量，这样就能在函数外部访问到<p></p>
+<h3 id="上传图片"><a href="#上传图片" class="headerlink" title="上传图片"></a>上传图片</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">class</span>=<span class="string">"form-control"</span> <span class="attr">name</span>=<span class="string">"photo"</span> <span class="attr">placeholder</span>=<span class="string">"图片"</span> @<span class="attr">change</span>=<span class="string">"getFile($event)"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="获取图片"><a href="#获取图片" class="headerlink" title="获取图片"></a>获取图片</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取图片并调用deal()将图片转换为Base64</span></span><br><span class="line">getFile(event) &#123;</span><br><span class="line">  <span class="keyword">this</span>.deal(event.target.files[<span class="number">0</span>])</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h3 id="转换成Base64"><a href="#转换成Base64" class="headerlink" title="转换成Base64"></a>转换成Base64</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">deal(photo) &#123;</span><br><span class="line">  <span class="comment">// 判断支不支持FileReader</span></span><br><span class="line">  <span class="keyword">if</span> (!photo || !<span class="built_in">window</span>.FileReader) &#123;</span><br><span class="line">    alert(<span class="string">'未选择图片或不支持上传图片！'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 判断上传的文件是否是图片格式</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="regexp">/^image/</span>.test(photo.type)) &#123;</span><br><span class="line">    <span class="comment">//创建一个reader</span></span><br><span class="line">    <span class="keyword">let</span> reader = <span class="keyword">new</span> FileReader();</span><br><span class="line">    <span class="comment">//将图片转成base64格式</span></span><br><span class="line">    reader.readAsDataURL(photo);</span><br><span class="line">    reader.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      base64_photo = reader.result; <span class="comment">// base64_photo是转换好的结果</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    alert(<span class="string">'请选择一张图片！'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><blockquote>
+<p><code>base64_photo</code>在<code>reader.onload</code>函数中，而<code>reader.onload</code>又在<code>deal</code>函数中，形成<strong>闭包</strong>，所以在外部无法访问到<code>base64_photo</code>，想在外部引用<code>base64_photo</code>就要另辟蹊径</p>
+</blockquote>
+<p>在这里提供一个方法，可以将<code>base64_photo</code>定义为全局变量，这样就能在函数外部访问到</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局变量与局部变量</span></span><br><span class="line"><span class="keyword">let</span> base64_photo = <span class="string">''</span>; <span class="comment">// 全局变量</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> base64_photo = <span class="string">''</span>; <span class="comment">// 局部变量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>The End😀</p>
 
@@ -279,133 +267,6 @@
 
    
 
-  
-    <script defer>
-const valineAPI = (() => {
-  try {
-    AV.init("j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz", "mhyUfuvzMqhq02Fjxk41wc25");
-  } catch(error) {}
-  const isExist = (identity) => {
-    identity = identity || getRealPath();
-    let query = new AV.Query('Timer');
-    return new Promise((resolve, reject) => {
-      query.equalTo("identity", identity);
-      query.find().then(results => {
-        resolve(results.length > 0);
-      }, error => reject(error));
-    })
-  }
-
-  const _get = (identity) => {
-    let query = null;
-    if(identity && identity instanceof Array){
-      let querys = [];
-      for(let i = 0; i < identity.length; ++i) {
-        querys[i] = new AV.Query('Timer');
-        querys[i].equalTo('identity', identity[i]);
-      }
-      query = AV.Query.or.apply(null ,querys);
-    } else {
-      identity = identity || getRealPath();
-      query = new AV.Query("Timer");
-      query.equalTo("identity", identity);
-    }
-
-    return new Promise((resolve, reject) => {
-      query.find()
-      .then(results => resolve(results))
-      .catch(error => reject(error))
-    })
-  }
-
-  const create = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let Todo = AV.Object.extend('Timer');
-      let todo = new Todo();
-      todo.set("times", 1);
-      todo.set("identity", identity);
-      todo.save().then(res => resolve(true), error => reject(error));
-    })
-  }
-
-  const update = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let query = new AV.Query('Timer');
-      query.equalTo("identity", identity);
-      query.find().then(todos => {
-        todos.forEach(todo => {
-          todo.set("times", todo.attributes.times + 1);
-        });
-        return AV.Object.saveAll(todos);
-      }).then(todos => resolve(true), error => reject(error));
-    })
-  }
-
-  return {
-    isExist,
-    _get,
-    update,
-    create
-  }
-})()
-
-const calcAndWriteTimes = () => {
-  let isPost = true;
-
-  let timerAllDOM = document.querySelectorAll(".article-timer");
-
-  if(isPost) {
-    let identity = timerAllDOM[0].getAttribute("data-identity");
-    valineAPI.isExist(identity)
-    .then(exist => {
-      if(exist) {
-        return valineAPI.update(identity);
-      }
-      return new Promise(resolve => resolve(true));
-    })
-    .then( succuess => valineAPI._get(identity))
-    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
-    .catch(error => console.log(error.message))
-    return ;
-  }
-
-  let timerDOMCache = {};
-
-  for(let timerDOM of timerAllDOM) {
-    let identity = timerDOM.getAttribute("data-identity");
-    if(timerDOMCache.hasOwnProperty(identity)){
-      timerDOMCache[identity].dom.push(timerDOM);
-    }else{
-      timerDOMCache[identity] = {
-        dom: [timerDOM],
-        times: undefined
-      };
-    }
-  }
-
-  let identities = Object.keys(timerDOMCache);
-  valineAPI._get(identities).then(results => {
-    for(let result of results) {
-      let {identity, times} = result.attributes;
-      timerDOMCache[identity].times = times;
-      timerDOMCache[identity].dom.map(item => item.innerText = times);
-    }
-    for(let identity of identities) {
-      if(timerDOMCache[identity].times){
-        continue;
-      }
-      timerDOMCache[identity].dom.map(item => item.innerText = 1);
-      valineAPI.create(identity);
-    }
-  }).catch(error => console.log(error.message))
-}
-
-if(true){
-  calcAndWriteTimes();
-}
-</script>
    
 
 </div>
@@ -413,10 +274,12 @@ if(true){
 
       <footer>
   <p class="site-info">
-    <span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+    <span id="time-to-now"></span>
     <br>
     Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
     <br>
+    
+      Oranges' blog
     
   </p>
 </footer>
@@ -425,7 +288,7 @@ if(true){
 
 <script>
 const timeToNowDOM = document.querySelector("#time-to-now");
-const startTimestamp = new Date(2018, 1, 10).getTime();
+const startTimestamp = new Date(2017, 10, 4).getTime();
 
 const updateTimeStr = () => {
   let offset = parseInt(

@@ -7,18 +7,16 @@
   <meta name="author" content="oranges, 1451426471@qq.com">
   
   
-  
+
   <title>GitHub与GitLab同时使用ssh key的解决方案 | Oranges</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
   
     <meta name="keywords" content="linux,git,">
   
-
-  <script>
-    console.log('\n%c Hexo-theme-bmw v4.0 ' + '%c 🎉 https://github.com/dongyuanxin/theme-bmw 🎉\n' + '\n%c View demo online ' + '%c 🔍 https://godbmw.com/ 🔍  \n' , 'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', '');
-  </script>
 
   
     <meta name="description" content="Welcome">
@@ -45,11 +43,9 @@
   
 
   
-  
+
   <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
-  
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+
   
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -81,7 +77,7 @@
       
         <li class="nav-item" data-path="/">
           
-            <a 
+            <a
               href="/"
               target="_self"
             >
@@ -92,7 +88,7 @@
       
         <li class="nav-item" data-path="/tags/">
           
-            <a 
+            <a
               href="/tags/"
               target="_self"
             >
@@ -103,18 +99,18 @@
       
         <li class="nav-item" data-path="/friends/">
           
-            <a 
+            <a
               href="/friends/"
               target="_self"
             >
-              友链
+              朋友
             </a>
           
         </li>
       
         <li class="nav-item" data-path="/about/">
           
-            <a 
+            <a
               href="/about/"
               target="_self"
             >
@@ -129,8 +125,8 @@
             <ul class="nav-menu--dropdown">
               
                 <li>
-                  <a 
-                    href="https://github.com/czorange123" 
+                  <a
+                    href="https://github.com/czorange123"
                     target="_blank"
                   >
                     Github
@@ -174,10 +170,10 @@
     iconMenuClicked = false;
   let navDOM = document.querySelector("nav.site-navigation");
   iconMenu.addEventListener("click", () => {
-    iconMenuClicked 
+    iconMenuClicked = !iconMenuClicked;
+    iconMenuClicked
       ? navDOM.className = "site-navigation active"
       : navDOM.className = "site-navigation";
-    iconMenuClicked = !iconMenuClicked;
   })
 </script>
 
@@ -205,38 +201,48 @@
     </span>
     
     
-      <span>
-        浏览 : <span class="article-timer" data-identity="sshkeys.html"></span>
-      </span>
-    
   </div>
 
   
 
   <div class="article-content">
     <div class="markdown-body">
-      <h3 id="放在前面的话">一、放在前面的话</h3><br>设置sshkey的目的是“免去每次提交代码都需要输入账号和密码”的操作，能更快速的提交或者部署项目。<br><blockquote><p>1、确保你安装了Git<br>2、确保在linux环境下（windows下需安装windows版本的git，然后打开桌面右键菜单打开gitbash同样适用）</p>
-</blockquote><br>Let’s do it😀<br><blockquote><p>首先，GitHub与GitLab不同的是他们的注册的邮箱肯定是不一样的<br>GitHub使用的是私人邮箱，最常见的比如qq邮箱<br>GitLab使用的是企业邮箱，也就是你公司的邮箱</p>
-</blockquote><br>然后根据两者不同的邮箱分别去生成不同的sshkey<br><br><h3 id="根据GitHub邮箱生成sshkey">一、根据GitHub邮箱生成sshkey</h3>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~</span><br><span class="line"><span class="meta">$</span> ssh-keygen -t rsa -C "your_name@github.com"（此处填写你的GitHub绑定的邮箱）</span><br></pre></td></tr></table></figure>
-<p>接着会出现类似如下信息：<br><blockquote><p>Generating public/private rsa key pair.<br>Enter file in which to save the key (/home/user_name/.ssh/id_rsa):</p>
-</blockquote><br>此时输出一个名称，最好有意义的名称，比如：<code>rsa_github</code>, 如果不输入则默认为<code>id_rsa</code>, 接着会出现：<br><blockquote><p>Enter passphrase (empty for no passphrase): =&gt; 提示你输入密码（我一般会留空）==&gt;回车即可<br>Enter same passphrase again: =&gt; 提示再次输入密码 ==&gt;回车即可</p>
-</blockquote><br>最后会出现：<br><blockquote><p>Generating public/private rsa key pair.<br>Enter file in which to save the key (/home/user_name/.ssh/id_rsa): <code>rsa_github</code><br>Enter passphrase (empty for no passphrase):<br>Enter same passphrase again:<br>Your identification has been saved in rsa_github.<br>Your public key has been saved in rsa_github.pub.<br>The key fingerprint is:<br>SHA256:zUXma9igea9llTvtRqLd+LzUQhoXuKWAWr24C3+W5Z0 <code>&quot;your_name@github.com&quot;</code><br>The key’s randomart image is:<br>+—[RSA 2048]—-+<br>|            o    |<br>|         o + .   |<br>|        o + + o  |<br>|       o <em> B = o |<br>|      . S </em> B =  |<br>|         o o.*.oo|<br>|      . .  +=++Bo|<br>|       o .++o E=o|<br>|        oo.    +=|<br>+—-[SHA256]—–+</p>
-</blockquote><br>这样就生成了<code>rsa_github</code>，查看<code>rsa_github</code>：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/.ssh</span><br><span class="line"><span class="meta">$</span> cat rsa_github.pub</span><br></pre></td></tr></table></figure></p>
-<p>出现的信息复制粘贴到GitHub即可，如下:<br><img src="/images/ssh_key.png" width="70%" height="70%" alt="ssh_key"><br>到这里，GitHub的sshkey已经添加成功，可以正常使用了。</p>
+      <h3 id="前面要说的话"><a href="#前面要说的话" class="headerlink" title="前面要说的话"></a>前面要说的话</h3><p>设置sshkey的目的是“免去每次提交代码都需要输入账号和密码”的操作，能更快速的提交或者部署项目。</p>
+<blockquote>
+<p>确保你安装了Git<br>确保在linux环境下（windows下需安装windows版本的git，然后打开桌面右键菜单打开gitbash同样适用）</p>
+</blockquote>
+<blockquote>
+<p>首先，GitHub与GitLab不同的是他们的注册的邮箱肯定是不一样的<br>GitHub使用的是私人邮箱，最常见的比如qq邮箱<br>GitLab使用的是企业邮箱，也就是你公司的邮箱</p>
+</blockquote>
+<p>Let’s do it😀</p>
+<p>然后根据两者不同的邮箱分别去生成不同的sshkey</p>
+<h3 id="根据GitHub邮箱生成sshkey"><a href="#根据GitHub邮箱生成sshkey" class="headerlink" title="根据GitHub邮箱生成sshkey"></a>根据GitHub邮箱生成sshkey</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~</span><br><span class="line"><span class="meta">$</span> ssh-keygen -t rsa -C "your_name@github.com"（此处填写你的GitHub绑定的邮箱）</span><br></pre></td></tr></table></figure>
+<p>接着会出现类似如下信息：</p>
+<blockquote>
+<p>Generating public/private rsa key pair.<br>Enter file in which to save the key (/home/user_name/.ssh/id_rsa):</p>
+</blockquote>
+<p>此时输出一个名称，最好有意义的名称，比如：<code>rsa_github</code>, 如果不输入则默认为<code>id_rsa</code><br>接着会出现：</p>
+<blockquote>
+<p>Enter passphrase (empty for no passphrase): =&gt; 提示你输入密码（我一般会留空）==&gt;回车即可<br>Enter same passphrase again: =&gt; 提示再次输入密码 ==&gt;回车即可</p>
+</blockquote>
+<p>最后会出现：</p>
+<blockquote>
+<p>Generating public/private rsa key pair.<br>  Enter file in which to save the key <code>(/home/user_name/.ssh/id_rsa)</code>: <code>rsa_github</code><br>  Enter passphrase (empty for no passphrase):<br>  Enter same passphrase again:<br>  Your identification has been saved in rsa_github.<br>  Your public key has been saved in rsa_github.pub.<br>  The key fingerprint is:<br>  SHA256:zUXma9igea9llTvtRqLd+LzUQhoXuKWAWr24C3+W5Z0 your_name@github .com<br>  The key’s randomart image is:<br>  +—[RSA 2048]—-+<br>  |            o    |<br>  |         o + .   |<br>  |        o + + o  |<br>  |       o <em> B = o |<br>  |      . S </em> B =  |<br>  |         o o.*.oo|<br>  |      . .  +=++Bo|<br>  |       o .++o E=o|<br>  |        oo.    +=|<br>  +—-[SHA256]—–+</p>
+</blockquote>
+<p>这样就生成了<code>rsa_github</code>，注意上面信息中标黄色的字，表示生成的<code>key</code>所在目录。<br>接下来我们要查看生成的<code>rsa_github</code>，将里面的内容复制粘贴到github里面去。<br>查看<code>rsa_github</code>：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/.ssh</span><br><span class="line"><span class="meta">$</span> cat rsa_github.pub</span><br></pre></td></tr></table></figure></p>
+<p>出现的信息复制粘贴到GitHub即可，如下:<br><img src="/images/sshkeys/ssh_key_github.png" alt="github ssh key"><br>到这里，GitHub的sshkey已经添加成功，可以正常使用了。</p>
 <hr>
-<p></p><h3 id="根据GitLab邮箱生成sshkey">二、根据GitLab邮箱生成sshkey</h3><br>步骤基本与生成GitHub sshkey一致，稍有不同，理解每一步的含义很重要<p></p>
+<h3 id="根据GitLab邮箱生成sshkey"><a href="#根据GitLab邮箱生成sshkey" class="headerlink" title="根据GitLab邮箱生成sshkey"></a>根据GitLab邮箱生成sshkey</h3><p>步骤基本与生成GitHub sshkey类似，稍有不同，理解每一步的含义很重要</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~</span><br><span class="line"><span class="meta">$</span> ssh-keygen -t rsa -C "your_name@gitlab.com" （此处填写你的GitLab绑定的邮箱，一般为企业邮箱）</span><br></pre></td></tr></table></figure>
 <p>在出现的信息后面输入与github区分的名称，比如<code>rsa_gitlab</code>,接着直接<b>回车</b>即可</p>
 <p>这样就会在<strong>~/.ssh</strong>目录下生成两个新文件：<code>rsa_gitlab</code> 和 <code>rsa_gitlab.pub</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/.ssh</span><br><span class="line"><span class="meta">$</span> cat rsa_gitlab.pub</span><br></pre></td></tr></table></figure>
-<p>复制出现的信息，粘贴到你的GitLab的sshkey页面上，如下：<br><img src="/images/sshkey.png" width="70%" height="70%" alt="ssh_key"><br>OK,此时已经成功添加了两者的sshkey,但我们还需要一些配置去使用它。</p>
-<p></p><h3 id="配置">三、配置</h3><br>配置是为了让github与gitlab能够区分他们各自的sshkey，所以需要创建一个config文件来管理sshkeys<p></p>
+<p>复制出现的信息，粘贴到你的GitLab的sshkey页面上，如下：<br><img src="/images/sshkeys/ssh_key_gitlab.png" alt="gitlab ssh key"><br>OK,此时已经成功添加了两者的sshkey,但我们还需要一些配置去使用它。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置是为了让github与gitlab能够区分他们各自的sshkey，所以需要创建一个config文件来管理sshkeys</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/.ssh/</span><br><span class="line"><span class="meta">$</span> touch config</span><br><span class="line"><span class="meta">$</span> sudo vim config</span><br></pre></td></tr></table></figure>
-<p>在config里面加上以下内容：<br><blockquote><p><em># github</em><br>Host github.com<br>HostName github.com<br>PreferredAuthentications publickey<br>IdentityFile ~/.ssh/<strong>rsa_github</strong><br><em># gitlab</em><br>Host <strong>gitlab.company’s web site.com</strong><br>HostName <strong>gitlab.company’s web site.com</strong><br>PreferredAuthentications publickey<br>IdentityFile ~/.ssh/<strong>rsa_gitlab</strong></p>
+<p>在config里面加上以下内容：<br><blockquote><p><em># github</em><br>Host github.com<br>HostName github.com<br>PreferredAuthentications publickey<br>IdentityFile ~/.ssh/<code>rsa_github</code><br><em># gitlab</em><br>Host <code>gitlab.company&#39;s web site.com</code><br>HostName <code>gitlab.company&#39;s web site.com</code><br>PreferredAuthentications publickey<br>IdentityFile ~/.ssh/<code>rsa_gitlab</code></p>
 </blockquote></p>
-<p><strong>注：加粗的地方根据自己实际情况进行修改</strong>.</p>
+<p><strong>注：标注的地方根据自己实际情况进行修改</strong>.</p>
 <p>现在你应该能正常使用了<br>The End😀</p>
 
     </div>
@@ -294,133 +300,6 @@
 
    
 
-  
-    <script defer>
-const valineAPI = (() => {
-  try {
-    AV.init("j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz", "mhyUfuvzMqhq02Fjxk41wc25");
-  } catch(error) {}
-  const isExist = (identity) => {
-    identity = identity || getRealPath();
-    let query = new AV.Query('Timer');
-    return new Promise((resolve, reject) => {
-      query.equalTo("identity", identity);
-      query.find().then(results => {
-        resolve(results.length > 0);
-      }, error => reject(error));
-    })
-  }
-
-  const _get = (identity) => {
-    let query = null;
-    if(identity && identity instanceof Array){
-      let querys = [];
-      for(let i = 0; i < identity.length; ++i) {
-        querys[i] = new AV.Query('Timer');
-        querys[i].equalTo('identity', identity[i]);
-      }
-      query = AV.Query.or.apply(null ,querys);
-    } else {
-      identity = identity || getRealPath();
-      query = new AV.Query("Timer");
-      query.equalTo("identity", identity);
-    }
-
-    return new Promise((resolve, reject) => {
-      query.find()
-      .then(results => resolve(results))
-      .catch(error => reject(error))
-    })
-  }
-
-  const create = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let Todo = AV.Object.extend('Timer');
-      let todo = new Todo();
-      todo.set("times", 1);
-      todo.set("identity", identity);
-      todo.save().then(res => resolve(true), error => reject(error));
-    })
-  }
-
-  const update = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let query = new AV.Query('Timer');
-      query.equalTo("identity", identity);
-      query.find().then(todos => {
-        todos.forEach(todo => {
-          todo.set("times", todo.attributes.times + 1);
-        });
-        return AV.Object.saveAll(todos);
-      }).then(todos => resolve(true), error => reject(error));
-    })
-  }
-
-  return {
-    isExist,
-    _get,
-    update,
-    create
-  }
-})()
-
-const calcAndWriteTimes = () => {
-  let isPost = true;
-
-  let timerAllDOM = document.querySelectorAll(".article-timer");
-
-  if(isPost) {
-    let identity = timerAllDOM[0].getAttribute("data-identity");
-    valineAPI.isExist(identity)
-    .then(exist => {
-      if(exist) {
-        return valineAPI.update(identity);
-      }
-      return new Promise(resolve => resolve(true));
-    })
-    .then( succuess => valineAPI._get(identity))
-    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
-    .catch(error => console.log(error.message))
-    return ;
-  }
-
-  let timerDOMCache = {};
-
-  for(let timerDOM of timerAllDOM) {
-    let identity = timerDOM.getAttribute("data-identity");
-    if(timerDOMCache.hasOwnProperty(identity)){
-      timerDOMCache[identity].dom.push(timerDOM);
-    }else{
-      timerDOMCache[identity] = {
-        dom: [timerDOM],
-        times: undefined
-      };
-    }
-  }
-
-  let identities = Object.keys(timerDOMCache);
-  valineAPI._get(identities).then(results => {
-    for(let result of results) {
-      let {identity, times} = result.attributes;
-      timerDOMCache[identity].times = times;
-      timerDOMCache[identity].dom.map(item => item.innerText = times);
-    }
-    for(let identity of identities) {
-      if(timerDOMCache[identity].times){
-        continue;
-      }
-      timerDOMCache[identity].dom.map(item => item.innerText = 1);
-      valineAPI.create(identity);
-    }
-  }).catch(error => console.log(error.message))
-}
-
-if(true){
-  calcAndWriteTimes();
-}
-</script>
    
 
 </div>
@@ -428,10 +307,12 @@ if(true){
 
       <footer>
   <p class="site-info">
-    <span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+    <span id="time-to-now"></span>
     <br>
     Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
     <br>
+    
+      Oranges' blog
     
   </p>
 </footer>
@@ -440,7 +321,7 @@ if(true){
 
 <script>
 const timeToNowDOM = document.querySelector("#time-to-now");
-const startTimestamp = new Date(2018, 1, 10).getTime();
+const startTimestamp = new Date(2017, 10, 4).getTime();
 
 const updateTimeStr = () => {
   let offset = parseInt(

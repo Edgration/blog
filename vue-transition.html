@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="oranges, 1451426471@qq.com">
+  
+  
+
+  <title>Vue transition 折叠类动画自动获取隐藏层高度以及手风琴效果bug解决 | Oranges</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  
+    <meta name="keywords" content="css,vue,transition,">
+  
+
+  
+    <meta name="description" content="Welcome">
+  
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+  
+
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/icon/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+  <script src="/js/util.js"></script>
+<script src="/js/valine.min.js"></script>
+
+  
+
+  
+
+  
+
+  <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
+
+  
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126364107-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-126364107-1');
+  </script>
+</head>
+
+  <body>
+
+    
+
+    <div id="app">
+
+      <div class="header-wrap">
+  <header>
+    <div class="site-brand">
+      <div class="site-title">
+        <a href="/">Oranges</a>
+      </div>
+    </div>
+    <nav class="site-navigation">
+      <ul class="nav-menu">
+      
+        <li class="nav-item" data-path="/">
+          
+            <a
+              href="/"
+              target="_self"
+            >
+              主页
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          
+            <a
+              href="/tags/"
+              target="_self"
+            >
+              标签
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          
+            <a
+              href="/friends/"
+              target="_self"
+            >
+              朋友
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          
+            <a
+              href="/about/"
+              target="_self"
+            >
+              关于
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="">
+          
+            <a href="javascript:void(0);" v-else>抓到我</a>
+            <ul class="nav-menu--dropdown">
+              
+                <li>
+                  <a
+                    href="https://github.com/czorange123"
+                    target="_blank"
+                  >
+                    Github
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+      </ul>
+    </nav>
+    <i class="iconfont icon-menu"></i>
+  </header>
+</div>
+
+<script>
+  let links = document.querySelectorAll('.nav-item');
+  for(let link of links){
+    let childrenLink = link.querySelector('ul');
+    link.addEventListener('mouseenter', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown active";
+      }
+    })
+    link.addEventListener('mouseleave', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown";
+      }
+    })
+  }
+  let rootRealPath = getRealPath(window.location.pathname, true);
+  for(let link of links) {
+    let linkPath = link.getAttribute("data-path");
+    if(linkPath && getRealPath(linkPath, true) === rootRealPath) {
+      link.className = "nav-item hover";
+    }
+  }
+
+  let iconMenu = document.querySelector("i.iconfont.icon-menu"),
+    iconMenuClicked = false;
+  let navDOM = document.querySelector("nav.site-navigation");
+  iconMenu.addEventListener("click", () => {
+    iconMenuClicked = !iconMenuClicked;
+    iconMenuClicked
+      ? navDOM.className = "site-navigation active"
+      : navDOM.className = "site-navigation";
+  })
+</script>
+
+      
+
+
+
+
+
+
+
+
+<div class="container post-index">
+
+  
+
+<div class="post">
+  <h1 class="article-title">
+    <span>Vue transition 折叠类动画自动获取隐藏层高度以及手风琴效果bug解决</span>
+  </h1>
+  <div class="article-top-meta">
+    <span>
+      发布 : 
+      2019-07-13
+    </span>
+    
+    
+  </div>
+
+  
+
+  <div class="article-content">
+    <div class="markdown-body">
+      <h4 id="前面要说的话"><a href="#前面要说的话" class="headerlink" title="前面要说的话"></a>前面要说的话</h4><p>前段时间，在解决左侧导航栏激活问题时，发现折叠动画过渡不是很平滑，并且还伴随着一些bug。使用起来不是很流畅，于是在解决完激活bug后，我决定把动画效果也解决掉。</p>
+<hr>
+<h4 id="先来看看要解决的问题，如下图："><a href="#先来看看要解决的问题，如下图：" class="headerlink" title="先来看看要解决的问题，如下图："></a>先来看看要解决的问题，如下图：</h4><p><img src="/images/vue-transition/before1.gif" alt="最初的样式!"><br>不知细心的你有没有发现什么问题？<br>当点击折叠展开<code>menu-one</code>栏目的时候没有什么问题，但点击折叠展开<code>mene-two</code>栏目，当动画定格在<code>menu-two-2</code>选项的时候，<code>menu-two-3</code>及以下的部分直接立即完成了过渡。为什么会这样？下面说原因。</p>
+<h4 id="上图实现代码："><a href="#上图实现代码：" class="headerlink" title="上图实现代码："></a>上图实现代码：</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- html部分 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">transition</span> <span class="attr">name</span>=<span class="string">"sub-menu"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span></span></span><br><span class="line"><span class="tag">    <span class="attr">class</span>=<span class="string">"site-menu-sub"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-show</span>=<span class="string">"item.children &amp;&amp; isOpen === aindex"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span></span></span><br><span class="line"><span class="tag">      <span class="attr">v-for</span>=<span class="string">"(child, index) in item.children"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">:key</span>=<span class="string">"index"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">class</span>=<span class="string">"site-menu-item"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">router-link</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">"animsition-link"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">:to</span>=<span class="string">"`/$&#123;child.href&#125;`"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="selector-tag">--</span> <span class="selector-tag">css</span>部分 <span class="selector-tag">--</span>&gt;</span><br><span class="line"><span class="selector-class">.site-menu-sub</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.sub-menu-enter-active</span>,</span><br><span class="line"><span class="selector-class">.sub-menu-leave-active</span> &#123;</span><br><span class="line">  <span class="attribute">transition</span>: all .<span class="number">3s</span> ease;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">70px</span>; <span class="comment">/* 这里70px为menu-one子菜单的高度 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.sub-menu-enter</span>,</span><br><span class="line"><span class="selector-class">.sub-menu-leave-to</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">0px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里因为我把过渡完成时（完全展开时）的<code>height</code>设置为70px，<code>height</code> 从0 ~ 70px 之间完成了过渡，但高于70px的元素就会有问题，高度超出70px部分会立即完成过渡，没有平滑过渡效果。这里我设置的70px高度正好为<code>muen-one</code>展开的高度，这就是为什么<code>menu-one</code>展开折叠没问题，而<code>menu-two</code>会有问题。同样的，如果我把<code>height</code>设置为<code>menu-two</code>展开的高度（210px），那么<code>menu-one</code>展开折叠动画就会有问题。这里我不举例说明，可以自己尝试。</p>
+<h4 id="上面的例子能说明："><a href="#上面的例子能说明：" class="headerlink" title="上面的例子能说明："></a>上面的例子能说明：</h4><ul>
+<li>通过<code>transition</code>动画去控制变化元素高度或者宽度<ul>
+<li>多个折叠类元素高度或宽度不一样时，不能直接将高或宽写为固定值（写死）。</li>
+<li>折叠类元素不确定高或宽的情况下，也不能直接将高或宽写为固定值（写死）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="折衷的解决方案："><a href="#折衷的解决方案：" class="headerlink" title="折衷的解决方案："></a>折衷的解决方案：</h4><h4 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h4><p>通过<code>max-height</code> 或 <code>max-width</code> 去控制元素的最大高宽。</p>
+<p>为什么叫折衷，因为有缺陷，具体看下面：<br><img src="/images/vue-transition/before2.gif" alt="折衷的解决方案的样式!"><br>看出问题来了吗？过渡效果好像变得很快，这是因为<code>max-height</code>设置成了1000px，不过比最开始那个效果要好一点。</p>
+<h4 id="折衷解决方案代码："><a href="#折衷解决方案代码：" class="headerlink" title="折衷解决方案代码："></a>折衷解决方案代码：</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="selector-tag">--</span> <span class="selector-tag">css</span>部分 <span class="selector-tag">--</span>&gt;</span><br><span class="line"><span class="selector-class">.site-menu-sub</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.sub-menu-enter-active</span>,</span><br><span class="line"><span class="selector-class">.sub-menu-leave-active</span> &#123;</span><br><span class="line">  <span class="attribute">transition</span>: all .<span class="number">3s</span> ease;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">1000px</span>; <span class="comment">/* 这里将最大高度设置为折叠元素不可能超越的高度 比如1000px */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.sub-menu-enter</span>,</span><br><span class="line"><span class="selector-class">.sub-menu-leave-to</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">0px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>html代码部分没有改变，仅仅将<code>height</code>改为<code>max-height</code>了，并且将<code>max-height</code>设置为折叠元素不可能超越的高度。如果<code>max-height</code>设置的太小，比展开后元素高度低。那展开后样式会出现问题，展示不完全。<br>并且这种解决方案没达到最完美效果，代码维护成本也大。</p>
+<hr>
+<h4 id="完美的解决方案："><a href="#完美的解决方案：" class="headerlink" title="完美的解决方案："></a>完美的解决方案：</h4><p>先放出效果图：<br><img src="/images/vue-transition/before3.gif" alt="完美的解决方案的样式!"></p>
+<h4 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h4><p>通过JavaScript 钩子的方式获取隐藏层的高度，动态去改变隐藏层的高度</p>
+<h4 id="具体实现方案和代码如下："><a href="#具体实现方案和代码如下：" class="headerlink" title="具体实现方案和代码如下："></a>具体实现方案和代码如下：</h4><p>新建<code>collapse-transition.js</code>（名字自己定义）作为函数式组件被引用，代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// collapse-transition.js</span></span><br><span class="line"><span class="keyword">const</span> transitionStyle = <span class="string">'0.3s height ease-in-out'</span>;</span><br><span class="line"><span class="keyword">const</span> Transition = &#123;</span><br><span class="line">  beforeEnter(el) &#123;</span><br><span class="line">    el.style.transition = transitionStyle;</span><br><span class="line">    <span class="keyword">if</span> (!el.dataset) el.dataset = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    el.style.height = <span class="number">0</span>;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  enter(el) &#123;</span><br><span class="line">    <span class="keyword">if</span> (el.scrollHeight !== <span class="number">0</span>) &#123;</span><br><span class="line">      el.style.height = <span class="string">`<span class="subst">$&#123;el.scrollHeight&#125;</span>px`</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      el.style.height = <span class="string">''</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    el.style.overflow = <span class="string">'hidden'</span>;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  afterEnter(el) &#123;</span><br><span class="line">    el.style.transition = <span class="string">''</span>;</span><br><span class="line">    el.style.height = <span class="string">''</span>;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  beforeLeave(el) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!el.dataset) el.dataset = &#123;&#125;;</span><br><span class="line">    el.style.height = <span class="string">`<span class="subst">$&#123;el.scrollHeight&#125;</span>px`</span>;</span><br><span class="line">    el.style.overflow = <span class="string">'hidden'</span>;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  leave(el) &#123;</span><br><span class="line">    <span class="keyword">if</span> (el.scrollHeight !== <span class="number">0</span>) &#123;</span><br><span class="line">      el.style.transition = transitionStyle;</span><br><span class="line">      el.style.height = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  afterLeave(el) &#123;</span><br><span class="line">    el.style.transition = <span class="string">''</span>;</span><br><span class="line">    el.style.height = <span class="string">''</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  name: <span class="string">'CollapseTransition'</span>,</span><br><span class="line">  functional: <span class="literal">true</span>,</span><br><span class="line">  render(h, &#123; children &#125;) &#123;</span><br><span class="line">    <span class="keyword">const</span> data = &#123;</span><br><span class="line">      on: Transition,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> h(<span class="string">'transition'</span>, data, children);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>在需要的页面引入：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- mune.vue页面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="keyword">import</span> CollapseTransition <span class="keyword">from</span> <span class="string">'@/utils/collapse-transition'</span>; <span class="comment">// 本人将collapse-transition.js 放置在工具类utils文件夹</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="undefined">    components: &#123;</span></span><br><span class="line"><span class="javascript">      <span class="string">'collapse-transition'</span>: CollapseTransition,</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">  &#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>使用：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- mune.vue页面 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collapse-transition</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span></span></span><br><span class="line"><span class="tag">      <span class="attr">class</span>=<span class="string">"site-menu-sub"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">v-show</span>=<span class="string">"item.children &amp;&amp; isOpen === aindex"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-for</span>=<span class="string">"(child, index) in item.children"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">:key</span>=<span class="string">"index"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">"site-menu-item"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">router-link</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"animsition-link"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">:to</span>=<span class="string">"`/$&#123;child.href&#125;`"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">collapse-transition</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>之前的css删除，不再需要了。</p>
+<p>到这一步自动获取元素高度的问题解决了，可以说是“一劳永逸”了。不管隐藏层高度多高，动画都没有问题。</p>
+<hr>
+<h4 id="手风琴模式过渡问题"><a href="#手风琴模式过渡问题" class="headerlink" title="手风琴模式过渡问题"></a>手风琴模式过渡问题</h4><p>然而看似美好，实则新的问题一直伴随着我们。</p>
+<p>不知你们发现了一个问题没，以上实现效果图有个过渡动画bug，就是手风琴模式（只保持一个子菜单的展开）过渡效果没出来。在<code>menu-two</code>展开状态下点击<code>折叠的menu-one</code>，我们发现<code>menu-two</code>直接关闭，而没有过渡动画。</p>
+<p>解决方案：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// collapse-transition.js</span></span><br><span class="line">beforeLeave(el) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!el.dataset) el.dataset = &#123;&#125;;</span><br><span class="line">  el.style.display = <span class="string">'block'</span>; <span class="comment">// 添加这一行</span></span><br><span class="line">  el.style.height = <span class="string">`<span class="subst">$&#123;el.scrollHeight&#125;</span>px`</span>;</span><br><span class="line">  el.style.overflow = <span class="string">'hidden'</span>;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
+<p>在<code>beforeLeave</code>钩子中加入 <code>display: &#39;block&#39;</code> 如上图。</p>
+<p>实现效果图：<br><img src="/images/vue-transition/after.gif" alt="手风琴模式!"></p>
+<p>到这里就彻底解决了vue transition折叠展开过渡动画的问题。</p>
+<hr>
+<h4 id="具体参考资料："><a href="#具体参考资料：" class="headerlink" title="具体参考资料："></a>具体参考资料：</h4><ul>
+<li><a href="https://segmentfault.com/q/1010000011359250" target="_blank" rel="noopener">vuejs如何实现这样的展开收起动画？</a></li>
+<li><a href="https://cn.vuejs.org/v2/guide/transitions.html#JavaScript-%E9%92%A9%E5%AD%90" target="_blank" rel="noopener">vue 官方中文文档-进入/离开 &amp; 列表过渡-JavaScript 钩子</a></li>
+<li><a href="https://github.com/ElemeFE/element/blob/dev/src/transitions/collapse-transition.js" target="_blank" rel="noopener">element-ui collapse-transition动画源码</a></li>
+</ul>
+<h4 id="其他说明"><a href="#其他说明" class="headerlink" title="其他说明"></a>其他说明</h4><ul>
+<li>gif录制过程中难免出现卡顿掉帧现象，本页面所有效果图不能代表实际实现效果。</li>
+<li>gif录制软件<a href="https://github.com/NickeManarin/ScreenToGif" target="_blank" rel="noopener">ScreenToGif</a>。</li>
+</ul>
+<p>The End😀</p>
+
+    </div>
+  </div>
+  
+  
+  
+
+  
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+      <span>
+        
+          <i class="iconfont icon-06tags"></i>标签: 
+          
+          <span class="span--tag">
+            <a href="/tags/css/">
+              #css
+            </a>
+          </span>
+          
+          <span class="span--tag">
+            <a href="/tags/vue/">
+              #vue
+            </a>
+          </span>
+          
+          <span class="span--tag">
+            <a href="/tags/transition/">
+              #transition
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="article-meta pull-right">
+    </div>
+  </div>
+</div>
+
+
+
+  <nav class="post-navigation">
+    
+      <div class="nav-pre">
+        <i class="iconfont icon-prev"></i>
+        上一篇:
+        <a href="/2018-summary.html" target="_self">2018年终总结与规划</a>
+      </div>
+    
+    
+  </nav>
+
+   
+
+   
+
+</div>
+
+
+      <footer>
+  <p class="site-info">
+    <span id="time-to-now"></span>
+    <br>
+    Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
+    <br>
+    
+      Oranges' blog
+    
+  </p>
+</footer>
+
+
+
+<script>
+const timeToNowDOM = document.querySelector("#time-to-now");
+const startTimestamp = new Date(2017, 10, 4).getTime();
+
+const updateTimeStr = () => {
+  let offset = parseInt(
+      (new Date().getTime() - startTimestamp) / 1000,
+      10
+    ),
+    day = Math.floor(offset / 86400),
+    hour = Math.floor((offset % 86400) / 3600),
+    minute = Math.floor(((offset % 86400) % 3600) / 60),
+    second = Math.floor(((offset % 86400) % 3600) % 60);
+  timeToNowDOM.innerHTML =
+    day + "天" + hour + "小时" + minute + "分钟" + second + "秒";
+  setTimeout(updateTimeStr, 500);
+}
+
+setTimeout(updateTimeStr, 500);
+</script>
+
+
+      <div class="back-to-top hidden">
+  <span>
+    <i class="iconfont icon-60"></i><span></span>%
+  </span>
+</div>
+
+<script>
+const updateIconToTop = percent => {
+  let dom = document.querySelector(".back-to-top span span");
+  dom.innerText = percent;
+  if(percent < 1) {
+    document.querySelector(".back-to-top").className = "back-to-top hidden";
+  } else {
+    document.querySelector(".back-to-top").className = "back-to-top";
+  }
+}
+
+const handleScoll = () => {
+  let isRunning = false;
+  return () => {
+    if (isRunning) return;
+    isRunning = true;
+    window.requestAnimationFrame(timestamp => {
+      let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop,
+        scrollHeight =
+          document.documentElement.scrollHeight ||
+          document.body.scrollHeight,
+        clientHeight =
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+      isRunning = false;
+      if (scrollTop <= 1) {
+        updateIconToTop(0);
+        return;
+      }
+      if (scrollTop + clientHeight >= scrollHeight) {
+        updateIconToTop(100);
+      } else {
+        updateIconToTop(parseInt(
+          100 * scrollTop / (scrollHeight - clientHeight),
+          10
+        ));
+      }
+    });
+  };
+}
+
+const backToTop = () => {
+  let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop,
+    delay = 10,
+    time = 200;
+  if (scrollTop <= 20) {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    return;
+  }
+  let step = Math.ceil(scrollTop * delay / time);
+  let timer = setInterval(() => {
+    scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop - step <= 0) {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      clearInterval(timer);
+    } else {
+      document.documentElement.scrollTop = scrollTop - step;
+      document.body.scrollTop = scrollTop - step;
+    }
+  }, delay);
+}
+
+document.addEventListener("scroll", handleScoll(), false);
+
+document.querySelector(".back-to-top").addEventListener("click", backToTop, false);
+
+</script>
+
+    </div>
+
+    
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<script>
+  (() => {
+    const mathjaxConfig = {
+      showProcessingMessages: false, //关闭js加载过程信息
+      messageStyle: "none", //不显示信息
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]], //行内公式选择符
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]], //段内公式选择符
+        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+      },
+      "HTML-CSS": {
+        availableFonts: ["STIX", "TeX"], //可选字体
+        showMathMenu: false //关闭右击菜单显示
+      }
+    }
+
+    let mathjaxInterval = setInterval(() => {
+      if(!window.MathJax){
+        return;
+      }
+      window.MathJax.Hub.Config(mathjaxConfig)
+      window.MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('app')])
+
+      clearInterval(mathjaxInterval)
+    }, 10)    
+  })()
+</script>
+    
+
+    <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js" async></script>
+<script async>
+  let fancyTimer = setInterval(function(){
+    if(!window.$){
+      return;
+    }
+    $(document).ready(function() {
+      $(".post img").each(function () {
+        if($(this).parent().get(0).tagName.toLowerCase() === "a") {
+          return;
+        }
+        // $(this).attr("data-fancybox", "gallery"); // if you add 'data-fancybox', img will display after showed
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "gallery");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      });
+      
+      clearInterval(fancyTimer);
+    });
+  }, 10);
+</script>
+
+    
+  </body>
+
+</html>

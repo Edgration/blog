@@ -7,18 +7,16 @@
   <meta name="author" content="oranges, 1451426471@qq.com">
   
   
-  
-  <title>“windows下sublime 安装GitGutter插件无法正常使用”的问题 | Oranges</title>
+
+  <title>“Windows下sublime 安装GitGutter插件无法正常使用”的问题 | Oranges</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
 
   
     <meta name="keywords" content="工具,sublime,">
   
-
-  <script>
-    console.log('\n%c Hexo-theme-bmw v4.0 ' + '%c 🎉 https://github.com/dongyuanxin/theme-bmw 🎉\n' + '\n%c View demo online ' + '%c 🔍 https://godbmw.com/ 🔍  \n' , 'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', '');
-  </script>
 
   
     <meta name="description" content="Welcome">
@@ -45,11 +43,9 @@
   
 
   
-  
+
   <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
-  
-  
-    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+
   
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -81,7 +77,7 @@
       
         <li class="nav-item" data-path="/">
           
-            <a 
+            <a
               href="/"
               target="_self"
             >
@@ -92,7 +88,7 @@
       
         <li class="nav-item" data-path="/tags/">
           
-            <a 
+            <a
               href="/tags/"
               target="_self"
             >
@@ -103,18 +99,18 @@
       
         <li class="nav-item" data-path="/friends/">
           
-            <a 
+            <a
               href="/friends/"
               target="_self"
             >
-              友链
+              朋友
             </a>
           
         </li>
       
         <li class="nav-item" data-path="/about/">
           
-            <a 
+            <a
               href="/about/"
               target="_self"
             >
@@ -129,8 +125,8 @@
             <ul class="nav-menu--dropdown">
               
                 <li>
-                  <a 
-                    href="https://github.com/czorange123" 
+                  <a
+                    href="https://github.com/czorange123"
                     target="_blank"
                   >
                     Github
@@ -174,10 +170,10 @@
     iconMenuClicked = false;
   let navDOM = document.querySelector("nav.site-navigation");
   iconMenu.addEventListener("click", () => {
-    iconMenuClicked 
+    iconMenuClicked = !iconMenuClicked;
+    iconMenuClicked
       ? navDOM.className = "site-navigation active"
       : navDOM.className = "site-navigation";
-    iconMenuClicked = !iconMenuClicked;
   })
 </script>
 
@@ -196,7 +192,7 @@
 
 <div class="post">
   <h1 class="article-title">
-    <span>“windows下sublime 安装GitGutter插件无法正常使用”的问题</span>
+    <span>“Windows下sublime 安装GitGutter插件无法正常使用”的问题</span>
   </h1>
   <div class="article-top-meta">
     <span>
@@ -204,10 +200,6 @@
       2018-03-28
     </span>
     
-    
-      <span>
-        浏览 : <span class="article-timer" data-identity="second.html"></span>
-      </span>
     
   </div>
 
@@ -280,133 +272,6 @@
 
    
 
-  
-    <script defer>
-const valineAPI = (() => {
-  try {
-    AV.init("j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz", "mhyUfuvzMqhq02Fjxk41wc25");
-  } catch(error) {}
-  const isExist = (identity) => {
-    identity = identity || getRealPath();
-    let query = new AV.Query('Timer');
-    return new Promise((resolve, reject) => {
-      query.equalTo("identity", identity);
-      query.find().then(results => {
-        resolve(results.length > 0);
-      }, error => reject(error));
-    })
-  }
-
-  const _get = (identity) => {
-    let query = null;
-    if(identity && identity instanceof Array){
-      let querys = [];
-      for(let i = 0; i < identity.length; ++i) {
-        querys[i] = new AV.Query('Timer');
-        querys[i].equalTo('identity', identity[i]);
-      }
-      query = AV.Query.or.apply(null ,querys);
-    } else {
-      identity = identity || getRealPath();
-      query = new AV.Query("Timer");
-      query.equalTo("identity", identity);
-    }
-
-    return new Promise((resolve, reject) => {
-      query.find()
-      .then(results => resolve(results))
-      .catch(error => reject(error))
-    })
-  }
-
-  const create = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let Todo = AV.Object.extend('Timer');
-      let todo = new Todo();
-      todo.set("times", 1);
-      todo.set("identity", identity);
-      todo.save().then(res => resolve(true), error => reject(error));
-    })
-  }
-
-  const update = (identity) => {
-    identity = identity || getRealPath();
-    return new Promise((resolve, reject) => {
-      let query = new AV.Query('Timer');
-      query.equalTo("identity", identity);
-      query.find().then(todos => {
-        todos.forEach(todo => {
-          todo.set("times", todo.attributes.times + 1);
-        });
-        return AV.Object.saveAll(todos);
-      }).then(todos => resolve(true), error => reject(error));
-    })
-  }
-
-  return {
-    isExist,
-    _get,
-    update,
-    create
-  }
-})()
-
-const calcAndWriteTimes = () => {
-  let isPost = true;
-
-  let timerAllDOM = document.querySelectorAll(".article-timer");
-
-  if(isPost) {
-    let identity = timerAllDOM[0].getAttribute("data-identity");
-    valineAPI.isExist(identity)
-    .then(exist => {
-      if(exist) {
-        return valineAPI.update(identity);
-      }
-      return new Promise(resolve => resolve(true));
-    })
-    .then( succuess => valineAPI._get(identity))
-    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
-    .catch(error => console.log(error.message))
-    return ;
-  }
-
-  let timerDOMCache = {};
-
-  for(let timerDOM of timerAllDOM) {
-    let identity = timerDOM.getAttribute("data-identity");
-    if(timerDOMCache.hasOwnProperty(identity)){
-      timerDOMCache[identity].dom.push(timerDOM);
-    }else{
-      timerDOMCache[identity] = {
-        dom: [timerDOM],
-        times: undefined
-      };
-    }
-  }
-
-  let identities = Object.keys(timerDOMCache);
-  valineAPI._get(identities).then(results => {
-    for(let result of results) {
-      let {identity, times} = result.attributes;
-      timerDOMCache[identity].times = times;
-      timerDOMCache[identity].dom.map(item => item.innerText = times);
-    }
-    for(let identity of identities) {
-      if(timerDOMCache[identity].times){
-        continue;
-      }
-      timerDOMCache[identity].dom.map(item => item.innerText = 1);
-      valineAPI.create(identity);
-    }
-  }).catch(error => console.log(error.message))
-}
-
-if(true){
-  calcAndWriteTimes();
-}
-</script>
    
 
 </div>
@@ -414,10 +279,12 @@ if(true){
 
       <footer>
   <p class="site-info">
-    <span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+    <span id="time-to-now"></span>
     <br>
     Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
     <br>
+    
+      Oranges' blog
     
   </p>
 </footer>
@@ -426,7 +293,7 @@ if(true){
 
 <script>
 const timeToNowDOM = document.querySelector("#time-to-now");
-const startTimestamp = new Date(2018, 1, 10).getTime();
+const startTimestamp = new Date(2017, 10, 4).getTime();
 
 const updateTimeStr = () => {
   let offset = parseInt(
