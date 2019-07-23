@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
 
   
-    <meta name="keywords" content="linux,工具,">
+    <meta name="keywords" content="工具,linux,">
   
 
   
@@ -47,6 +47,10 @@
   <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
 
   
+
+  <!-- gitalk comments -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126364107-1"></script>
@@ -243,14 +247,14 @@
           <i class="iconfont icon-06tags"></i>标签: 
           
           <span class="span--tag">
-            <a href="/tags/linux/">
-              #linux
+            <a href="/tags/工具/">
+              #工具
             </a>
           </span>
           
           <span class="span--tag">
-            <a href="/tags/工具/">
-              #工具
+            <a href="/tags/linux/">
+              #linux
             </a>
           </span>
           
@@ -281,9 +285,48 @@
     
   </nav>
 
-   
+  
 
-   
+  
+
+  
+    <a href="#comment" class="comment-anchor"></a>
+
+
+
+
+  <div id="gitalk-container"></div>
+
+
+<script defer>
+  if( false ) {
+    let path = getRealPath()
+    new Valine({
+      el: "#vcomments",
+      appId: "j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz",
+      appKey: "mhyUfuvzMqhq02Fjxk41wc25",
+      notify: false,
+      verify: false,
+      avatar: "robohash",
+      placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
+      path
+    });
+  }
+  if ( true ) {
+    var gitalk = new Gitalk({
+      clientID: "57fd80ca85f9d3276439",
+      clientSecret: "7411553827815e5766ebe0bce5e4fb2e36e3217f",
+      repo: "blog",
+      owner: "czorange123",
+      admin: "czorange123",
+      id: "location.pathname",
+      distractionFreeMode: "false"
+    })
+
+    gitalk.render('gitalk-container')
+  }
+</script>
+  
 
 </div>
 

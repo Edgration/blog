@@ -8,7 +8,7 @@
   
   
 
-  <title>GitHub与GitLab同时使用ssh key的解决方案 | Oranges</title>
+  <title>ssh key密钥生成与使用 | Oranges</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -47,6 +47,10 @@
   <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
 
   
+
+  <!-- gitalk comments -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126364107-1"></script>
@@ -192,7 +196,7 @@
 
 <div class="post">
   <h1 class="article-title">
-    <span>GitHub与GitLab同时使用ssh key的解决方案</span>
+    <span>ssh key密钥生成与使用</span>
   </h1>
   <div class="article-top-meta">
     <span>
@@ -207,43 +211,25 @@
 
   <div class="article-content">
     <div class="markdown-body">
-      <h3 id="前面要说的话"><a href="#前面要说的话" class="headerlink" title="前面要说的话"></a>前面要说的话</h3><p>设置sshkey的目的是“免去每次提交代码都需要输入账号和密码”的操作，能更快速的提交或者部署项目。</p>
-<blockquote>
-<p>确保你安装了Git<br>确保在linux环境下（windows下需安装windows版本的git，然后打开桌面右键菜单打开gitbash同样适用）</p>
-</blockquote>
-<blockquote>
-<p>首先，GitHub与GitLab不同的是他们的注册的邮箱肯定是不一样的<br>GitHub使用的是私人邮箱，最常见的比如qq邮箱<br>GitLab使用的是企业邮箱，也就是你公司的邮箱</p>
-</blockquote>
-<p>Let’s do it😀</p>
-<p>然后根据两者不同的邮箱分别去生成不同的sshkey</p>
-<h3 id="根据GitHub邮箱生成sshkey"><a href="#根据GitHub邮箱生成sshkey" class="headerlink" title="根据GitHub邮箱生成sshkey"></a>根据GitHub邮箱生成sshkey</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~</span><br><span class="line"><span class="meta">$</span> ssh-keygen -t rsa -C "your_name@github.com"（此处填写你的GitHub绑定的邮箱）</span><br></pre></td></tr></table></figure>
-<p>接着会出现类似如下信息：</p>
-<blockquote>
-<p>Generating public/private rsa key pair.<br>Enter file in which to save the key (/home/user_name/.ssh/id_rsa):</p>
-</blockquote>
-<p>此时输出一个名称，最好有意义的名称，比如：<code>rsa_github</code>, 如果不输入则默认为<code>id_rsa</code><br>接着会出现：</p>
-<blockquote>
-<p>Enter passphrase (empty for no passphrase): =&gt; 提示你输入密码（我一般会留空）==&gt;回车即可<br>Enter same passphrase again: =&gt; 提示再次输入密码 ==&gt;回车即可</p>
-</blockquote>
-<p>最后会出现：</p>
-<blockquote>
-<p>Generating public/private rsa key pair.<br>  Enter file in which to save the key <code>(/home/user_name/.ssh/id_rsa)</code>: <code>rsa_github</code><br>  Enter passphrase (empty for no passphrase):<br>  Enter same passphrase again:<br>  Your identification has been saved in rsa_github.<br>  Your public key has been saved in rsa_github.pub.<br>  The key fingerprint is:<br>  SHA256:zUXma9igea9llTvtRqLd+LzUQhoXuKWAWr24C3+W5Z0 your_name@github .com<br>  The key’s randomart image is:<br>  +—[RSA 2048]—-+<br>  |            o    |<br>  |         o + .   |<br>  |        o + + o  |<br>  |       o <em> B = o |<br>  |      . S </em> B =  |<br>  |         o o.*.oo|<br>  |      . .  +=++Bo|<br>  |       o .++o E=o|<br>  |        oo.    +=|<br>  +—-[SHA256]—–+</p>
-</blockquote>
-<p>这样就生成了<code>rsa_github</code>，注意上面信息中标黄色的字，表示生成的<code>key</code>所在目录。<br>接下来我们要查看生成的<code>rsa_github</code>，将里面的内容复制粘贴到github里面去。<br>查看<code>rsa_github</code>：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/.ssh</span><br><span class="line"><span class="meta">$</span> cat rsa_github.pub</span><br></pre></td></tr></table></figure></p>
-<p>出现的信息复制粘贴到GitHub即可，如下:<br><img src="/images/sshkeys/ssh_key_github.png" alt="github ssh key"><br>到这里，GitHub的sshkey已经添加成功，可以正常使用了。</p>
-<hr>
-<h3 id="根据GitLab邮箱生成sshkey"><a href="#根据GitLab邮箱生成sshkey" class="headerlink" title="根据GitLab邮箱生成sshkey"></a>根据GitLab邮箱生成sshkey</h3><p>步骤基本与生成GitHub sshkey类似，稍有不同，理解每一步的含义很重要</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~</span><br><span class="line"><span class="meta">$</span> ssh-keygen -t rsa -C "your_name@gitlab.com" （此处填写你的GitLab绑定的邮箱，一般为企业邮箱）</span><br></pre></td></tr></table></figure>
-<p>在出现的信息后面输入与github区分的名称，比如<code>rsa_gitlab</code>,接着直接<b>回车</b>即可</p>
-<p>这样就会在<strong>~/.ssh</strong>目录下生成两个新文件：<code>rsa_gitlab</code> 和 <code>rsa_gitlab.pub</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/.ssh</span><br><span class="line"><span class="meta">$</span> cat rsa_gitlab.pub</span><br></pre></td></tr></table></figure>
-<p>复制出现的信息，粘贴到你的GitLab的sshkey页面上，如下：<br><img src="/images/sshkeys/ssh_key_gitlab.png" alt="gitlab ssh key"><br>OK,此时已经成功添加了两者的sshkey,但我们还需要一些配置去使用它。</p>
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置是为了让github与gitlab能够区分他们各自的sshkey，所以需要创建一个config文件来管理sshkeys</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd ~/.ssh/</span><br><span class="line"><span class="meta">$</span> touch config</span><br><span class="line"><span class="meta">$</span> sudo vim config</span><br></pre></td></tr></table></figure>
-<p>在config里面加上以下内容：<br><blockquote><p><em># github</em><br>Host github.com<br>HostName github.com<br>PreferredAuthentications publickey<br>IdentityFile ~/.ssh/<code>rsa_github</code><br><em># gitlab</em><br>Host <code>gitlab.company&#39;s web site.com</code><br>HostName <code>gitlab.company&#39;s web site.com</code><br>PreferredAuthentications publickey<br>IdentityFile ~/.ssh/<code>rsa_gitlab</code></p>
-</blockquote></p>
-<p><strong>注：标注的地方根据自己实际情况进行修改</strong>.</p>
-<p>现在你应该能正常使用了<br>The End😀</p>
+      <h3 id="生成密钥ssh-key"><a href="#生成密钥ssh-key" class="headerlink" title="生成密钥ssh key"></a>生成密钥ssh key</h3><h4 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h4><p>在命令行输入以下命令来生成ssh key<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure></p>
+<p>会出现以下信息：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/orange/.ssh/id_rsa):</span><br></pre></td></tr></table></figure></p>
+<p>以上信息告诉我们要输入一个文件名来存储<code>ssh key</code>，它的存储目录为<code>/home/orange/.ssh/</code>。（如果什么都不输入，那么文件名默认为<code>id_rsa</code>），这里我们使用默认文件名，直接按回车<kbd>Enter</kbd>进入下一步。</p>
+<h4 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h4><p>会出现以下信息：(第3 ~ 4行出现的信息)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/orange/.ssh/id_rsa):</span><br><span class="line">Created directory '/home/orange/.ssh'.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br></pre></td></tr></table></figure></p>
+<p>以上信息告诉我们自动创建了目录<code>/home/orange/.ssh</code>来存储<code>ssh key</code>文件，然后需要为<code>ssh key</code>创建密码（什么都不输入，默认为无密码），这里我们不需要设置密码，直接按回车<kbd>Enter</kbd>进入下一步。</p>
+<h4 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h4><p>会出现以下信息：(第5行出现的信息)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/orange/.ssh/id_rsa):</span><br><span class="line">Created directory '/home/orange/.ssh'.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br></pre></td></tr></table></figure></p>
+<p>直接回车<kbd>Enter</kbd>进入下一步。</p>
+<h4 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h4><p>会出现以下信息：(第6 ~ 21行出现的信息)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/orange/.ssh/id_rsa):</span><br><span class="line">Created directory '/home/orange/.ssh'.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/orange/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/orange/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:wMJW8YgH0fYCbKwnE2qDuoviuoHxBVty11dbDotpU54 orange@orange</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|   oooo.    + .  |</span><br><span class="line">|  ..==o+   * B   |</span><br><span class="line">|..o+Bo*.o * E .  |</span><br><span class="line">|oo+B.+...o .     |</span><br><span class="line">|+ o+.  .S        |</span><br><span class="line">|oo .             |</span><br><span class="line">|o..              |</span><br><span class="line">|+.               |</span><br><span class="line">|O+               |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure></p>
+<p>到这一步，我们就生成了<code>id_rsa</code>，ssh key就储存在这个文件中。我们需要查看这个文件，把里面的内容复制到需要的地方。（github、 gitlab、 远程服务器等。）</p>
+<h4 id="查看id-rsa文件"><a href="#查看id-rsa文件" class="headerlink" title="查看id_rsa文件"></a>查看<code>id_rsa</code>文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>会出现类型以下信息：（<code>id_rsa.pub</code>文件内容）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAfR1V3LgCM/J/6fDTLXRhLv1GCxU3m4P09yRI6TNmDYDPrdu4l</span><br><span class="line">VS0ukSRZISmtzekcP4ra3KyXRa/npf4FztH2Peq+NiBlk5zCrgAd+sdXTcrtte1foVFrMa9vIZ</span><br><span class="line">nrAGIAAAAB3NzaC1yc2EAAfR1V3LgCM/J/6fDTLXRhLv1GCxU3m4P09yRI6TNmDYDPrdu4lVS0</span><br><span class="line">ukSRZISmtzekcP4ra3KyXRa/npf4FztH2Peq+NiBlk5zCrgAd+sdXTcrtte1foVFrMa9vIZnrAGI orange@orange</span><br></pre></td></tr></table></figure></p>
+<h3 id="github配置-ssh-key"><a href="#github配置-ssh-key" class="headerlink" title="github配置 ssh key"></a>github配置 ssh key</h3><p>复制以上出现的一大串内容，粘贴到自己github里面，这样以后，在当前电脑上提交/拉取代码的时候就不再需要输入密码。（其他没有生成ssh key的电脑上需要输入密码）。具体见下图：<br><img src="/images/sshkeys/ssh_key_github.png" alt></p>
+<h3 id="gitlab配置-ssh-key"><a href="#gitlab配置-ssh-key" class="headerlink" title="gitlab配置 ssh key"></a>gitlab配置 ssh key</h3><p>类似于github配置步骤，这里不再具体说明😜。</p>
+<h3 id="远程服务器配置ssh-key免密码登录"><a href="#远程服务器配置ssh-key免密码登录" class="headerlink" title="远程服务器配置ssh key免密码登录"></a>远程服务器配置ssh key免密码登录</h3><h5 id="正常登录远程服务器流程："><a href="#正常登录远程服务器流程：" class="headerlink" title="正常登录远程服务器流程："></a>正常登录远程服务器流程：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@服务器ip地址</span><br></pre></td></tr></table></figure>
+<p>出现以下信息：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user@服务器ip地址's password:</span><br></pre></td></tr></table></figure></p>
+<p>输入正确密码才能登录上去。</p>
+<h5 id="接下来配置无密码登录"><a href="#接下来配置无密码登录" class="headerlink" title="接下来配置无密码登录"></a>接下来配置无密码登录</h5><p>先通过密码登录到服务器，然后：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~/.ssh/</span><br><span class="line">vim authorized_keys</span><br></pre></td></tr></table></figure></p>
+<p>将ssh key粘贴进去，保存，退出重新登录即可不用输入密码。</p>
+<p>The End😀</p>
 
     </div>
   </div>
@@ -298,9 +284,48 @@
     
   </nav>
 
-   
+  
 
-   
+  
+
+  
+    <a href="#comment" class="comment-anchor"></a>
+
+
+
+
+  <div id="gitalk-container"></div>
+
+
+<script defer>
+  if( false ) {
+    let path = getRealPath()
+    new Valine({
+      el: "#vcomments",
+      appId: "j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz",
+      appKey: "mhyUfuvzMqhq02Fjxk41wc25",
+      notify: false,
+      verify: false,
+      avatar: "robohash",
+      placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
+      path
+    });
+  }
+  if ( true ) {
+    var gitalk = new Gitalk({
+      clientID: "57fd80ca85f9d3276439",
+      clientSecret: "7411553827815e5766ebe0bce5e4fb2e36e3217f",
+      repo: "blog",
+      owner: "czorange123",
+      admin: "czorange123",
+      id: "location.pathname",
+      distractionFreeMode: "false"
+    })
+
+    gitalk.render('gitalk-container')
+  }
+</script>
+  
 
 </div>
 
