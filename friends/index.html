@@ -50,17 +50,20 @@
   
 
   <!-- gitalk comments -->
-  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126364107-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-126364107-1');
-  </script>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126364107-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-126364107-1');
+    </script>
+  
 </head>
 
   <body>
@@ -226,47 +229,6 @@
   <div class="markdown-body">
     
   </div>
-  
-
-  
-    <a href="#comment" class="comment-anchor"></a>
-
-
-
-
-  <div id="gitalk-container"></div>
-
-
-<script defer>
-  if( false ) {
-    let path = getRealPath()
-    new Valine({
-      el: "#vcomments",
-      appId: "j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz",
-      appKey: "mhyUfuvzMqhq02Fjxk41wc25",
-      notify: false,
-      verify: false,
-      avatar: "robohash",
-      placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
-      path
-    });
-  }
-  if ( true ) {
-    var gitalk = new Gitalk({
-      clientID: "57fd80ca85f9d3276439",
-      clientSecret: "7411553827815e5766ebe0bce5e4fb2e36e3217f",
-      repo: "blog",
-      owner: "czorange123",
-      admin: "czorange123",
-      id: location.pathname,
-      distractionFreeMode: "false"
-    })
-
-    gitalk.render('gitalk-container')
-  }
-</script>
-  
-
 </div>
 
 
