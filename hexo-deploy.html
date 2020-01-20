@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="oranges, 1451426471@qq.com">
+  
+  
+
+  <title>hexo一键部署到云服务器 | Oranges</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  
+    <meta name="keywords" content="hexo,blog,">
+  
+
+  
+    <meta name="description" content="Welcome">
+  
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/favicon.ico">
+  
+
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/icon/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/gitalk.css">
+
+  <script src="/js/util.js"></script>
+<script src="/js/valine.min.js"></script>
+
+  
+
+  
+
+  
+
+  <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
+
+  
+
+  <!-- gitalk comments -->
+  
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126364107-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-126364107-1');
+    </script>
+  
+</head>
+
+  <body>
+
+    
+
+    <div id="app">
+
+      <div class="header-wrap">
+  <header>
+    <div class="site-brand">
+      <div class="site-title">
+        <a href="/">Oranges</a>
+      </div>
+    </div>
+    <nav class="site-navigation">
+      <ul class="nav-menu">
+      
+        <li class="nav-item" data-path="/">
+          
+            <a
+              href="/"
+              target="_self"
+            >
+              主页
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          
+            <a
+              href="/tags/"
+              target="_self"
+            >
+              标签
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          
+            <a
+              href="/friends/"
+              target="_self"
+            >
+              朋友
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          
+            <a
+              href="/about/"
+              target="_self"
+            >
+              关于
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="">
+          
+            <a href="javascript:void(0);" v-else>抓到我</a>
+            <ul class="nav-menu--dropdown">
+              
+                <li>
+                  <a
+                    href="https://github.com/zchengsite"
+                    target="_blank"
+                  >
+                    Github
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+      </ul>
+    </nav>
+    <i class="iconfont icon-menu"></i>
+  </header>
+</div>
+
+<script>
+  let links = document.querySelectorAll('.nav-item');
+  for(let link of links){
+    let childrenLink = link.querySelector('ul');
+    link.addEventListener('mouseenter', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown active";
+      }
+    })
+    link.addEventListener('mouseleave', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown";
+      }
+    })
+  }
+  let rootRealPath = getRealPath(window.location.pathname, true);
+  for(let link of links) {
+    let linkPath = link.getAttribute("data-path");
+    if(linkPath && getRealPath(linkPath, true) === rootRealPath) {
+      link.className = "nav-item hover";
+    }
+  }
+
+  let iconMenu = document.querySelector("i.iconfont.icon-menu"),
+    iconMenuClicked = false;
+  let navDOM = document.querySelector("nav.site-navigation");
+  iconMenu.addEventListener("click", () => {
+    iconMenuClicked = !iconMenuClicked;
+    iconMenuClicked
+      ? navDOM.className = "site-navigation active"
+      : navDOM.className = "site-navigation";
+  })
+</script>
+
+      
+
+
+
+
+
+
+
+
+<div class="container post-index">
+
+  
+
+<div class="post">
+  <h1 class="article-title">
+    <span>hexo一键部署到云服务器</span>
+  </h1>
+  <div class="article-top-meta">
+    <span>
+      发布 : 
+      2018-05-01
+    </span>
+    
+    
+  </div>
+
+  
+
+  <div class="article-content">
+    <div class="markdown-body">
+      <p>上一篇记录了<a href="hexo-build.html">如何搭建一个简易的个人网站</a>，采用<code>hexo</code>，<code>github pages</code>进行搭建与部署。<br>本篇主要记录下如何将hexo博客部署到非<code>github pages</code>的第三方云服务器上，并实现一键部署。</p>
+<blockquote>
+<p>以下本地操作均在Ubuntu 18.04.1 LTS中进行测试。<br>以下云服务器上操作在阿里云Ubuntu 16.04.4 LTS \n \l中进行测试。</p>
+</blockquote>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
+<li style="list-style: none"><input type="checkbox" checked> 一台云服务器（阿里云、腾讯云等）</li>
+<li style="list-style: none"><input type="checkbox" checked> 已有hexo博客框架搭建的博客（具体可参考我<a href="hexo-build.html">上一篇记录文章</a>）</li>
+</ul>
+<h3 id="常用部署方法"><a href="#常用部署方法" class="headerlink" title="常用部署方法"></a>常用部署方法</h3><h4 id="打包本地hexo博客项目，上传到云服务器上，再配置nginx。"><a href="#打包本地hexo博客项目，上传到云服务器上，再配置nginx。" class="headerlink" title="打包本地hexo博客项目，上传到云服务器上，再配置nginx。"></a>打包本地hexo博客项目，上传到云服务器上，再配置nginx。</h4><h5 id="打包生成静态文件"><a href="#打包生成静态文件" class="headerlink" title="打包生成静态文件"></a>打包生成静态文件</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> hexo generate</span><br></pre></td></tr></table></figure>
+<h5 id="把根目录下生成的public文件夹压缩上传到云服务器根目录下"><a href="#把根目录下生成的public文件夹压缩上传到云服务器根目录下" class="headerlink" title="把根目录下生成的public文件夹压缩上传到云服务器根目录下"></a>把根目录下生成的<code>public</code>文件夹压缩上传到云服务器根目录下</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 压缩成html.zip</span><br><span class="line"><span class="meta">$</span> zip -q -r html.zip public</span><br><span class="line"><span class="meta">#</span> 将html.zip上传到云服务器</span><br><span class="line"><span class="meta">$</span> scp html.zip 用户名@服务器公网ip:~</span><br></pre></td></tr></table></figure>
+<h5 id="服务器上解压文件"><a href="#服务器上解压文件" class="headerlink" title="服务器上解压文件"></a>服务器上解压文件</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 先登录自己的服务器</span><br><span class="line"><span class="meta">$</span> ssh 用户名@服务器公网ip</span><br><span class="line"><span class="meta">#</span> 找到刚上传上来的html.zip并解压缩，我这里把解压缩的文件放在/var/www/blog/下面</span><br><span class="line"><span class="meta">$</span> cd /var/www</span><br><span class="line"><span class="meta">$</span> sudo mkdir blog</span><br><span class="line"><span class="meta">$</span> cd blog</span><br><span class="line"><span class="meta">$</span> sudo cp ~/html.zip .</span><br><span class="line"><span class="meta">$</span> sudo unzip html.zip</span><br><span class="line"><span class="meta">#</span> 得到public文件</span><br></pre></td></tr></table></figure>
+<h5 id="配置nginx"><a href="#配置nginx" class="headerlink" title="配置nginx"></a>配置nginx</h5><p>如果你服务器上已经安装了nginx，直接看下面。否则参考<a href="https://yq.aliyun.com/articles/710641?spm=5176.10695662.1996646101.searchclickresult.155256a0P4F06Z&amp;aly_as=MUa5PXuo" target="_blank" rel="noopener">nginx的安装与配置</a><br>启动ngxin，正常安装完成后默认已经启动<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo nginx</span><br></pre></td></tr></table></figure></p>
+<p>浏览器访问服务器ip查看nginx是否安装并启动。<br>出现<code>Welcome to nginx!</code>字样说明启动成功，否则自行搜索解决问题。</p>
+<p>现在配置hexo博客nginx<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> nginx配置文件在/etc/nginx下</span><br><span class="line"><span class="meta">$</span> cd /etc/nginx/sites-enabled</span><br><span class="line"><span class="meta">#</span> 文件夹下有default文件，是默认配置文件，修改它</span><br><span class="line"><span class="meta">$</span> sudo vim default</span><br></pre></td></tr></table></figure></p>
+<p>打开以后如下图显示<br><img src="/images/hexo-deploy/nginx-default.png" alt><br>修改红框标注的地方为你之前解压html.zip的目录，即<code>/var/www/blog/public</code>。<br>保存退出，重载nginx。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo nginx -s reload</span><br></pre></td></tr></table></figure></p>
+<p>再次访问访问服务器ip，现在应该出现的是你博客主页了。</p>
+
+    </div>
+  </div>
+  
+  
+  
+
+  
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+      <span>
+        
+          <i class="iconfont icon-06tags"></i>标签: 
+          
+          <span class="span--tag">
+            <a href="/tags/hexo/">
+              #hexo
+            </a>
+          </span>
+          
+          <span class="span--tag">
+            <a href="/tags/blog/">
+              #blog
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="article-meta pull-right">
+    </div>
+  </div>
+</div>
+
+
+
+  <nav class="post-navigation">
+    
+      <div class="nav-pre">
+        <i class="iconfont icon-prev"></i>
+        上一篇:
+        <a href="/hexo-build.html" target="_self">如何搭建一个简易的个人网站</a>
+      </div>
+    
+    
+      <div class="nav-next">
+        下一篇:
+        <a href="/linux.html" target="_self">Windows10子系统Ubuntu体验</a>
+        <i class="iconfont icon-next"></i>
+      </div>
+    
+  </nav>
+
+  
+
+  
+
+  
+    <a href="#comment" class="comment-anchor"></a>
+
+
+
+
+  <div id="gitalk-container"></div>
+
+
+<script defer>
+  if( false ) {
+    let path = getRealPath()
+    new Valine({
+      el: "#vcomments",
+      appId: "j73OlR745tdiYMdFRzbTPDrO-gzGzoHsz",
+      appKey: "mhyUfuvzMqhq02Fjxk41wc25",
+      notify: false,
+      verify: false,
+      avatar: "robohash",
+      placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
+      path
+    });
+  }
+  if ( true ) {
+    var gitalk = new Gitalk({
+      clientID: "57fd80ca85f9d3276439",
+      clientSecret: "7411553827815e5766ebe0bce5e4fb2e36e3217f",
+      repo: "blog",
+      owner: "zchengsite",
+      admin: "zchengsite",
+      id: location.pathname,
+      distractionFreeMode: "false"
+    })
+
+    gitalk.render('gitalk-container')
+  }
+</script>
+  
+
+</div>
+
+
+      <footer>
+  <p class="site-info">
+    Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> |
+    
+      Orange's blog
+    
+  </p>
+</footer>
+
+
+
+<script>
+const timeToNowDOM = document.querySelector("#time-to-now");
+const startTimestamp = new Date(2017, 10, 4).getTime();
+
+const updateTimeStr = () => {
+  let offset = parseInt(
+      (new Date().getTime() - startTimestamp) / 1000,
+      10
+    ),
+    day = Math.floor(offset / 86400),
+    hour = Math.floor((offset % 86400) / 3600),
+    minute = Math.floor(((offset % 86400) % 3600) / 60),
+    second = Math.floor(((offset % 86400) % 3600) % 60);
+  timeToNowDOM.innerHTML =
+    day + "天" + hour + "小时" + minute + "分钟" + second + "秒";
+  setTimeout(updateTimeStr, 500);
+}
+
+setTimeout(updateTimeStr, 500);
+</script>
+
+
+      <div class="back-to-top hidden">
+  <span>
+    <i class="iconfont icon-60"></i><span></span>%
+  </span>
+</div>
+
+<script>
+const updateIconToTop = percent => {
+  let dom = document.querySelector(".back-to-top span span");
+  dom.innerText = percent;
+  if(percent < 1) {
+    document.querySelector(".back-to-top").className = "back-to-top hidden";
+  } else {
+    document.querySelector(".back-to-top").className = "back-to-top";
+  }
+}
+
+const handleScoll = () => {
+  let isRunning = false;
+  return () => {
+    if (isRunning) return;
+    isRunning = true;
+    window.requestAnimationFrame(timestamp => {
+      let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop,
+        scrollHeight =
+          document.documentElement.scrollHeight ||
+          document.body.scrollHeight,
+        clientHeight =
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+      isRunning = false;
+      if (scrollTop <= 1) {
+        updateIconToTop(0);
+        return;
+      }
+      if (scrollTop + clientHeight >= scrollHeight) {
+        updateIconToTop(100);
+      } else {
+        updateIconToTop(parseInt(
+          100 * scrollTop / (scrollHeight - clientHeight),
+          10
+        ));
+      }
+    });
+  };
+}
+
+const backToTop = () => {
+  let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop,
+    delay = 10,
+    time = 200;
+  if (scrollTop <= 20) {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    return;
+  }
+  let step = Math.ceil(scrollTop * delay / time);
+  let timer = setInterval(() => {
+    scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop - step <= 0) {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      clearInterval(timer);
+    } else {
+      document.documentElement.scrollTop = scrollTop - step;
+      document.body.scrollTop = scrollTop - step;
+    }
+  }, delay);
+}
+
+document.addEventListener("scroll", handleScoll(), false);
+
+document.querySelector(".back-to-top").addEventListener("click", backToTop, false);
+
+</script>
+
+    </div>
+
+    
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<script>
+  (() => {
+    const mathjaxConfig = {
+      showProcessingMessages: false, //关闭js加载过程信息
+      messageStyle: "none", //不显示信息
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]], //行内公式选择符
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]], //段内公式选择符
+        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+      },
+      "HTML-CSS": {
+        availableFonts: ["STIX", "TeX"], //可选字体
+        showMathMenu: false //关闭右击菜单显示
+      }
+    }
+
+    let mathjaxInterval = setInterval(() => {
+      if(!window.MathJax){
+        return;
+      }
+      window.MathJax.Hub.Config(mathjaxConfig)
+      window.MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('app')])
+
+      clearInterval(mathjaxInterval)
+    }, 10)    
+  })()
+</script>
+    
+
+    <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js" async></script>
+<script async>
+  let fancyTimer = setInterval(function(){
+    if(!window.$){
+      return;
+    }
+    $(document).ready(function() {
+      $(".post img").each(function () {
+        if($(this).parent().get(0).tagName.toLowerCase() === "a") {
+          return;
+        }
+        // $(this).attr("data-fancybox", "gallery"); // if you add 'data-fancybox', img will display after showed
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "gallery");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      });
+      
+      clearInterval(fancyTimer);
+    });
+  }, 10);
+</script>
+
+    
+  </body>
+
+</html>
