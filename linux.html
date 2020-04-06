@@ -30,14 +30,14 @@
   
 
   <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/icon/iconfont.css">
-<link rel="stylesheet" href="/css/github-markdown.css">
-<link rel="stylesheet" href="/css/highlight.css">
-<link rel="stylesheet" href="/css/gitalk.css">
+  <link rel="stylesheet" href="/zchengsite.github.io/css/base.css">
+<link rel="stylesheet" href="/zchengsite.github.io/icon/iconfont.css">
+<link rel="stylesheet" href="/zchengsite.github.io/css/github-markdown.css">
+<link rel="stylesheet" href="/zchengsite.github.io/css/highlight.css">
+<link rel="stylesheet" href="/zchengsite.github.io/css/gitalk.css">
 
-  <script src="/js/util.js"></script>
-<script src="/js/valine.min.js"></script>
+  <script src="/zchengsite.github.io/js/util.js"></script>
+<script src="/zchengsite.github.io/js/valine.min.js"></script>
 
   
 
@@ -76,7 +76,7 @@
   <header>
     <div class="site-brand">
       <div class="site-title">
-        <a href="/">Oranges</a>
+        <a href="/zchengsite.github.io/">Oranges</a>
       </div>
     </div>
     <nav class="site-navigation">
@@ -85,7 +85,7 @@
         <li class="nav-item" data-path="/">
           
             <a
-              href="/"
+              href="/zchengsite.github.io/"
               target="_self"
             >
               主页
@@ -96,7 +96,7 @@
         <li class="nav-item" data-path="/tags/">
           
             <a
-              href="/tags/"
+              href="/zchengsite.github.io/tags/"
               target="_self"
             >
               标签
@@ -107,7 +107,7 @@
         <li class="nav-item" data-path="/friends/">
           
             <a
-              href="/friends/"
+              href="/zchengsite.github.io/friends/"
               target="_self"
             >
               朋友
@@ -118,7 +118,7 @@
         <li class="nav-item" data-path="/about/">
           
             <a
-              href="/about/"
+              href="/zchengsite.github.io/about/"
               target="_self"
             >
               关于
@@ -227,11 +227,11 @@
 <p>2.重启完毕后打开Windows10自带的应用商店，搜索“ubuntu”，找到下载。等下载完毕后打开，窗口会提示installing(正在安装)，等待几分钟。然后会提示输入用户名和密码，输入你喜欢的用户名和密码即可。 见下图:</p>
 </blockquote>
 <p><img src="/images/linux/linux_windows10_unubtu.jpg" alt><br>你已经安装完子系统，接下来去配置它，让它能够满足日常开发需求并且与Windows完美协作。</p>
-<p>1.安装node.js 按照下面依次执行 (参照<a href="https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions" target="_blank" rel="noopener">官方文档</a>)  <b style="color: red">请注意每一步是否执行成功，否则检查每一步！</b><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -</span><br><span class="line"><span class="meta">$</span> sudo apt-get install -y nodejs</span><br></pre></td></tr></table></figure></p>
-<p>2.安装git 按照下面执行(参照<a href="https://git-scm.com/download/linux" target="_blank" rel="noopener">官方文档</a>)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
-<p>3.（非必须）当然，如果你要玩个人网站(hexo博客等）需要安装hexo(参照<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">官方文档</a>)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install -g hexo-cli</span><br></pre></td></tr></table></figure></p>
+<p>1.安装node.js 按照下面依次执行 (参照<a href="https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions" target="_blank" rel="noopener">官方文档</a>)  <b style="color: red">请注意每一步是否执行成功，否则检查每一步！</b><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install -y nodejs</span></span><br></pre></td></tr></table></figure></p>
+<p>2.安装git 按照下面执行(参照<a href="https://git-scm.com/download/linux" target="_blank" rel="noopener">官方文档</a>)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install git</span></span><br></pre></td></tr></table></figure></p>
+<p>3.（非必须）当然，如果你要玩个人网站(hexo博客等）需要安装hexo(参照<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">官方文档</a>)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install -g hexo-cli</span></span><br></pre></td></tr></table></figure></p>
 <p>到这一步，你已经具备了开发环境所必要的工具和包，并且可以通过git拉取代码进行开发了，至于子系统的图形界面，你可以把Windows10作为子系统图形界面进行操作</p>
-<p>4.通过下面命令进入Windows目录<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd /mnt</span><br></pre></td></tr></table></figure></p>
+<p>4.通过下面命令进入Windows目录<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /mnt</span></span><br></pre></td></tr></table></figure></p>
 <p>5.拉取下来的项目可以随便放在你喜欢的磁盘（C、D、E、F…），通过Windows下的编程工具进行开发(like: Sublime_Text3等)</p>
 <p>The End😀</p>
 
@@ -250,13 +250,13 @@
           <i class="iconfont icon-06tags"></i>标签: 
           
           <span class="span--tag">
-            <a href="/tags/linux/">
+            <a href="/zchengsite.github.io/tags/linux/">
               #linux
             </a>
           </span>
           
           <span class="span--tag">
-            <a href="/tags/工具/">
+            <a href="/zchengsite.github.io/tags/工具/">
               #工具
             </a>
           </span>
@@ -276,13 +276,13 @@
       <div class="nav-pre">
         <i class="iconfont icon-prev"></i>
         上一篇:
-        <a href="/hexo-deploy.html" target="_self">hexo一键部署到云服务器</a>
+        <a href="/zchengsite.github.io/hexo-deploy.html" target="_self">hexo一键部署到云服务器</a>
       </div>
     
     
       <div class="nav-next">
         下一篇:
-        <a href="/Sanhe.html" target="_self">三河古镇一日游</a>
+        <a href="/zchengsite.github.io/Sanhe.html" target="_self">三河古镇一日游</a>
         <i class="iconfont icon-next"></i>
       </div>
     
@@ -336,10 +336,14 @@
 
       <footer>
   <p class="site-info">
-    Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> |
+    Theme - <a href="https://github.com/dongyuanxin/theme-bmw" target="_blank">BMW</a> |
     
       Orange's blog
     
+    <br />
+    <a href="http://www.beian.miit.gov.cn" target="_blank">鄂ICP备18028045号</a>
+    <br />
+    <span>已运行</span><span id="time-to-now"></span>
   </p>
 </footer>
 
@@ -379,8 +383,10 @@ const updateIconToTop = percent => {
   dom.innerText = percent;
   if(percent < 1) {
     document.querySelector(".back-to-top").className = "back-to-top hidden";
+    document.querySelector(".header-wrap").className = "header-wrap";
   } else {
     document.querySelector(".back-to-top").className = "back-to-top";
+    document.querySelector(".header-wrap").className = "header-wrap header-scroll-down";
   }
 }
 

@@ -30,14 +30,14 @@
   
 
   <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/icon/iconfont.css">
-<link rel="stylesheet" href="/css/github-markdown.css">
-<link rel="stylesheet" href="/css/highlight.css">
-<link rel="stylesheet" href="/css/gitalk.css">
+  <link rel="stylesheet" href="/zchengsite.github.io/css/base.css">
+<link rel="stylesheet" href="/zchengsite.github.io/icon/iconfont.css">
+<link rel="stylesheet" href="/zchengsite.github.io/css/github-markdown.css">
+<link rel="stylesheet" href="/zchengsite.github.io/css/highlight.css">
+<link rel="stylesheet" href="/zchengsite.github.io/css/gitalk.css">
 
-  <script src="/js/util.js"></script>
-<script src="/js/valine.min.js"></script>
+  <script src="/zchengsite.github.io/js/util.js"></script>
+<script src="/zchengsite.github.io/js/valine.min.js"></script>
 
   
 
@@ -76,7 +76,7 @@
   <header>
     <div class="site-brand">
       <div class="site-title">
-        <a href="/">Oranges</a>
+        <a href="/zchengsite.github.io/">Oranges</a>
       </div>
     </div>
     <nav class="site-navigation">
@@ -85,7 +85,7 @@
         <li class="nav-item" data-path="/">
           
             <a
-              href="/"
+              href="/zchengsite.github.io/"
               target="_self"
             >
               主页
@@ -96,7 +96,7 @@
         <li class="nav-item" data-path="/tags/">
           
             <a
-              href="/tags/"
+              href="/zchengsite.github.io/tags/"
               target="_self"
             >
               标签
@@ -107,7 +107,7 @@
         <li class="nav-item" data-path="/friends/">
           
             <a
-              href="/friends/"
+              href="/zchengsite.github.io/friends/"
               target="_self"
             >
               朋友
@@ -118,7 +118,7 @@
         <li class="nav-item" data-path="/about/">
           
             <a
-              href="/about/"
+              href="/zchengsite.github.io/about/"
               target="_self"
             >
               关于
@@ -240,7 +240,7 @@
           <i class="iconfont icon-06tags"></i>标签: 
           
           <span class="span--tag">
-            <a href="/tags/javascript/">
+            <a href="/zchengsite.github.io/tags/javascript/">
               #javascript
             </a>
           </span>
@@ -260,13 +260,13 @@
       <div class="nav-pre">
         <i class="iconfont icon-prev"></i>
         上一篇:
-        <a href="/sshkeys.html" target="_self">ssh key密钥生成与使用</a>
+        <a href="/zchengsite.github.io/sshkeys.html" target="_self">ssh key密钥生成与使用</a>
       </div>
     
     
       <div class="nav-next">
         下一篇:
-        <a href="/2018-summary.html" target="_self">2018年终总结与规划</a>
+        <a href="/zchengsite.github.io/2018-summary.html" target="_self">2018年终总结与规划</a>
         <i class="iconfont icon-next"></i>
       </div>
     
@@ -320,10 +320,14 @@
 
       <footer>
   <p class="site-info">
-    Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> |
+    Theme - <a href="https://github.com/dongyuanxin/theme-bmw" target="_blank">BMW</a> |
     
       Orange's blog
     
+    <br />
+    <a href="http://www.beian.miit.gov.cn" target="_blank">鄂ICP备18028045号</a>
+    <br />
+    <span>已运行</span><span id="time-to-now"></span>
   </p>
 </footer>
 
@@ -363,8 +367,10 @@ const updateIconToTop = percent => {
   dom.innerText = percent;
   if(percent < 1) {
     document.querySelector(".back-to-top").className = "back-to-top hidden";
+    document.querySelector(".header-wrap").className = "header-wrap";
   } else {
     document.querySelector(".back-to-top").className = "back-to-top";
+    document.querySelector(".header-wrap").className = "header-wrap header-scroll-down";
   }
 }
 
